@@ -1,4 +1,4 @@
 # tidytusesday
-Repository for tidytuesday work
+Repository for #TidyTuesday work
 
-https://github.com/rfordatascience/tidytuesday
+Date Source: https://github.com/rfordatascience/tidytuesday
