@@ -9,6 +9,8 @@ library(tidyverse)
 library(palmerpenguins) # Another way to get the data
 library(skimr)
 library(explore)
+library(rpart)
+library(rpart.plot)
 
 #### Data ####
 tuesdata <- tidytuesdayR::tt_load('2020-07-28')
@@ -100,7 +102,39 @@ explore(penguins_raw)
 #### Analysis ####
 
 # Make decision tree for identifying penguin species
-# Perform clustering analysis to identify different groups?
 # Visualize.....
 
+penguins.clean <- penguins %>% filter(!is.na(flipper_length_mm)) # remove 2 NA
 
+penguin.tree <- rpart(species ~ ., penguins.clean)
+
+rpart.plot(penguin.tree)
+
+prp(penguin.tree, 
+    type = 5, 
+    yesno = 2, 
+    uniform = TRUE, 
+    varlen = 0, 
+    faclen = 0, 
+    tweak = 1,
+    prefix = "",
+    suffix = "",
+    )
+
+title("Penguin Species Tree Classification")
+
+# Plot flipper length and bill length by penguin species
+ggplot(penguins.clean) +
+  geom_density(aes(x = flipper_length_mm, fill = species), alpha = 0.5, color = NA) +
+  scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77")) +
+  labs(title = "Flipper Length by Species",
+       subtitle = "Gentoo penguins have longer flippers.") +
+  theme_classic()
+
+ggplot(penguins.clean) +
+  geom_density(aes(x = bill_length_mm, fill = species), alpha = 0.5, color = NA) +
+  scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77")) +
+  theme_classic()
+
+
+# Plot map(?) of islands by species
