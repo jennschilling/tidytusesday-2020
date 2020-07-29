@@ -1,23 +1,23 @@
-# Get the Data
+# Author : Jenn Schilling
+# Title: #TidyTuesday Penguins
+# Date: 7/28/2020
+# Artwork by @allison_horst
 
-# Read in with tidytuesdayR package 
-# Install from CRAN via: install.packages("tidytuesdayR")
-# This loads the readme and all the datasets for the week of interest
+#### Packages ####
 library(tidytuesdayR)
 library(tidyverse)
 library(palmerpenguins) # Another way to get the data
 library(skimr)
 library(explore)
 
-# Either ISO-8601 date or year/week works!
+#### Data ####
 tuesdata <- tidytuesdayR::tt_load('2020-07-28')
 penguins <- tuesdata$penguins # cleaned data
 
-# Look at data
 skim(penguins)
 View(penguins)
 
-# Plotting
+#### Plotting ####
 
 penguins %>%
   ggplot(aes(x = species, y = body_mass_g)) +
@@ -67,7 +67,7 @@ penguins %>%
 # Species are on different islands - adelie is on all, but gentoo and chinstrap are only each on one
 
 
-# Let's look at the Raw Data
+#### Explore Raw Data ####
 skim(penguins_raw)
 
 View(penguins_raw)
@@ -87,6 +87,8 @@ penguins_raw %>%
   arrange(-n) %>%
   View()
 
+# Penguins have 1-3 records; there are 190 unique penguins in the dataset
+
 penguins_raw %>%
   group_by(`Date Egg`, Island) %>%
   count() %>%
@@ -94,4 +96,11 @@ penguins_raw %>%
   View()
 
 explore(penguins_raw)
+
+#### Analysis ####
+
+# Make decision tree for identifying penguin species
+# Perform clustering analysis to identify different groups?
+# Visualize.....
+
 
