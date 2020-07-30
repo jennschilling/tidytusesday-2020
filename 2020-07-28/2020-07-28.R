@@ -100,11 +100,13 @@ penguins_raw %>%
 explore(penguins_raw)
 
 #### Analysis ####
-
+v
 # Make decision tree for identifying penguin species
 # Visualize.....
 
 penguins.clean <- penguins %>% filter(!is.na(flipper_length_mm)) # remove 2 NA
+
+penguins.clean <- penguins.clean %>% mutate(species = ifelse(species == "Adelie", "Adélie", species))
 
 penguin.tree <- rpart(species ~ ., penguins.clean)
 
@@ -127,14 +129,71 @@ title("Penguin Species Tree Classification")
 ggplot(penguins.clean) +
   geom_density(aes(x = flipper_length_mm, fill = species), alpha = 0.5, color = NA) +
   scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77")) +
-  labs(title = "Flipper Length by Species",
-       subtitle = "Gentoo penguins have longer flippers.") +
-  theme_classic()
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 5)) +
+  labs(title = "Denisty Plot for Flipper Length by Species",
+       subtitle = "Gentoo penguins have longer flippers.",
+       x = "Flipper Length (mm)") +
+  theme(
+    # Hide panel borders and remove grid lines
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove panel background
+    panel.background = element_blank(),
+    # Change axis line
+    axis.line = element_line(colour = "black"),
+    # Remove y-axis
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.line.y = element_blank()
+  )
+ 
 
 ggplot(penguins.clean) +
   geom_density(aes(x = bill_length_mm, fill = species), alpha = 0.5, color = NA) +
   scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77")) +
-  theme_classic()
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 5)) +
+  labs(title = "Denisty Plot for Bill Length by Species",
+       subtitle = "Adélie penguins have shorter bills.",
+       x = "Bill Length (mm)") +
+  theme(
+    # Hide panel borders and remove grid lines
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove panel background
+    panel.background = element_blank(),
+    # Change axis line
+    axis.line = element_line(colour = "black"),
+    # Remove y-axis
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.line.y = element_blank()
+  ) 
 
+# Plot map of islands by species
 
-# Plot map(?) of islands by species
+library(mapproj) # For the polar orthographic map projection
+library(ggthemes) # For theme_map()
+
+# Get geospatial data for Antarctica only
+antarctica <- map_data("world", region = "Antarctica")
+
+# Location of islands in study
+locations <- tribble(
+  ~island, ~long, ~lat,
+  "Biscoe", -65.5000, -65.4333,
+  "Torgersen", -64.083, -64.7667,
+  "Dream", -64.2333, -64.7333
+)
+
+ggplot() +
+  geom_polygon(data = antarctica, aes(long, lat, group = group), 
+               fill = "white", color = "black") +
+  geom_point(data = locations, aes(long, lat), size = 3) +
+  geom_text(data = locations, aes(long, lat, label = island)) +
+  # This is where the magic happens
+  coord_map("ortho", orientation = c(-90, 0, 0), xlim = c(-60,130), ylim = NULL) +
+  theme_map()
