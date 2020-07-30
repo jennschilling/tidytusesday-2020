@@ -59,14 +59,16 @@ penguins %>%
   geom_point() +
   geom_smooth(method = "lm")
 
-# Can see positive relationship, intercepts are very different - would want to use a mixed model
+# Can see positive relationship, intercepts are very different
+# Would want to use a mixed model
 
 penguins %>%
   ggplot(aes(x = species)) +
   geom_bar() +
   facet_wrap(~ island)
 
-# Species are on different islands - adelie is on all, but gentoo and chinstrap are only each on one
+# Species are on different islands - adelie is on all, 
+# but gentoo and chinstrap are only each on one
 
 
 #### Explore Raw Data ####
@@ -104,9 +106,11 @@ v
 # Make decision tree for identifying penguin species
 # Visualize.....
 
-penguins.clean <- penguins %>% filter(!is.na(flipper_length_mm)) # remove 2 NA
+penguins.clean <- penguins %>% 
+  filter(!is.na(flipper_length_mm)) # remove 2 NA
 
-penguins.clean <- penguins.clean %>% mutate(species = ifelse(species == "Adelie", "Adélie", species))
+penguins.clean <- penguins.clean %>% 
+  mutate(species = ifelse(species == "Adelie", "Adélie", species))
 
 penguin.tree <- rpart(species ~ ., penguins.clean)
 
@@ -126,8 +130,10 @@ prp(penguin.tree,
 title("Penguin Species Tree Classification")
 
 # Plot flipper length and bill length by penguin species
-ggplot(penguins.clean) +
-  geom_density(aes(x = flipper_length_mm, fill = species), alpha = 0.5, color = NA) +
+flipperplot <- ggplot(penguins.clean) +
+  geom_density(aes(x = flipper_length_mm, fill = species),
+               alpha = 0.5, 
+               color = NA) +
   scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77")) +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 5)) +
   labs(title = "Denisty Plot for Flipper Length by Species",
@@ -150,8 +156,10 @@ ggplot(penguins.clean) +
   )
  
 
-ggplot(penguins.clean) +
-  geom_density(aes(x = bill_length_mm, fill = species), alpha = 0.5, color = NA) +
+billplot <- ggplot(penguins.clean) +
+  geom_density(aes(x = bill_length_mm, fill = species), 
+               alpha = 0.5, 
+               color = NA) +
   scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77")) +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 5)) +
   labs(title = "Denisty Plot for Bill Length by Species",
@@ -177,6 +185,7 @@ ggplot(penguins.clean) +
 
 library(mapproj) # For the polar orthographic map projection
 library(ggthemes) # For theme_map()
+library(ggrepel) # For labels
 
 # Get geospatial data for Antarctica only
 antarctica <- map_data("world", region = "Antarctica")
@@ -192,8 +201,39 @@ locations <- tribble(
 ggplot() +
   geom_polygon(data = antarctica, aes(long, lat, group = group), 
                fill = "white", color = "black") +
-  geom_point(data = locations, aes(long, lat), size = 3) +
-  geom_text(data = locations, aes(long, lat, label = island)) +
+  geom_point(data = locations, aes(long, lat), size = 2, color = "red") +
+  geom_label_repel(data = locations, 
+                  aes(long, lat, label = island), 
+                  point.padding = 1, 
+                  segment.size = 1,  
+                  min.segment.length = 0) +
   # This is where the magic happens
-  coord_map("ortho", orientation = c(-90, 0, 0), xlim = c(-60,130), ylim = NULL) +
-  theme_map()
+  coord_map("ortho", orientation = c(-90, 0, 0), 
+            xlim = c(-90, 20), 
+            ylim = NULL) + # Can't get a good zoom on the map
+  labs(title = "Locations of Palmer Penguins") +
+  theme_map() 
+
+# Plot locations differently
+locplot <- ggplot(penguins.clean, aes(x = island, fill = species)) +
+  geom_bar(position = "dodge", alpha = 0.5) +
+  scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77")) +
+  labs(title = "Locations of Penguins",
+       subtitle = "",
+       x = "",
+       y = "Number of Penguins") +
+  theme(
+    # Hide panel borders and remove grid lines
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove panel background
+    panel.background = element_blank(),
+    # Change axis line
+    axis.line = element_line(colour = "black")
+  ) 
+
+
+# Put it all together
+# Flipper Plot, Bill Plot, Location Plot
+# Tree Diagram, Image
