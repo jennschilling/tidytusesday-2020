@@ -11,6 +11,8 @@ library(skimr)
 library(explore)
 library(rpart)
 library(rpart.plot)
+library(png)
+library(grid)
 
 #### Data ####
 tuesdata <- tidytuesdayR::tt_load('2020-07-28')
@@ -102,7 +104,7 @@ penguins_raw %>%
 explore(penguins_raw)
 
 #### Analysis ####
-v
+
 # Make decision tree for identifying penguin species
 # Visualize.....
 
@@ -130,13 +132,13 @@ prp(penguin.tree,
 title("Penguin Species Tree Classification")
 
 # Plot flipper length and bill length by penguin species
-flipperplot <- ggplot(penguins.clean) +
+flipper.plot <- ggplot(penguins.clean) +
   geom_density(aes(x = flipper_length_mm, fill = species),
                alpha = 0.5, 
                color = NA) +
   scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77")) +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 5)) +
-  labs(title = "Denisty Plot for Flipper Length by Species",
+  labs(title = "Distribution of Flipper Lengths by Species",
        subtitle = "Gentoo penguins have longer flippers.",
        x = "Flipper Length (mm)") +
   theme(
@@ -156,13 +158,13 @@ flipperplot <- ggplot(penguins.clean) +
   )
  
 
-billplot <- ggplot(penguins.clean) +
+bill.plot <- ggplot(penguins.clean) +
   geom_density(aes(x = bill_length_mm, fill = species), 
                alpha = 0.5, 
                color = NA) +
   scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77")) +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 5)) +
-  labs(title = "Denisty Plot for Bill Length by Species",
+  labs(title = "Distribution of Bill Lengths by Species",
        subtitle = "Adélie penguins have shorter bills.",
        x = "Bill Length (mm)") +
   theme(
@@ -215,7 +217,7 @@ ggplot() +
   theme_map() 
 
 # Plot locations differently
-locplot <- ggplot(penguins.clean, aes(x = island, fill = species)) +
+loc.plot <- ggplot(penguins.clean, aes(x = island, fill = species)) +
   geom_bar(position = "dodge", alpha = 0.5) +
   scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77")) +
   labs(title = "Locations of Penguins",
@@ -235,5 +237,29 @@ locplot <- ggplot(penguins.clean, aes(x = island, fill = species)) +
 
 
 # Put it all together
+
 # Flipper Plot, Bill Plot, Location Plot
-# Tree Diagram, Image
+flipper.plot
+bill.plot
+loc.plot
+
+# Tree Diagram
+prp(penguin.tree, 
+    type = 5, 
+    yesno = 2, 
+    uniform = TRUE, 
+    varlen = 0, 
+    faclen = 0, 
+    tweak = 1,
+    prefix = "",
+    suffix = "",
+)
+
+title("Penguin Species Tree Classification")
+
+# Image
+penguins.img <- readPNG("2020-07-28\\penguins.png")
+
+# Title
+
+# Footer
