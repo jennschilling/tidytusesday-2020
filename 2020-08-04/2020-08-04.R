@@ -44,7 +44,16 @@ country_totals <- country_totals %>%
 # 2016 is missing one value
 country_totals %>% filter(is.na(`2016`)) # Malta has Exports of NA in 2016
 
-table(energy_types$country_name)
+
+# Pumped hydro (level 2 measure) is a sub measure of hydro (level 1 measure), 
+# if you include it in sum it's like double counting.
+# Remove Level 2 from Energy Types
+energy_types <- energy_types %>%
+  filter(level != 'Level 2')
 
 # Make Data Long
+energy_types_long <- energy_types %>%
+  pivot_longer(cols = `2016`:`2018`, names_to = 'year', values_to = 'gwh')
 
+country_totals_long <- country_totals %>%
+  pivot_longer(cols = `2016`:`2018`, names_to = 'year', values_to = 'gwh')
