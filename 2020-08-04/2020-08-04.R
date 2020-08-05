@@ -6,7 +6,8 @@
 #### Libraries ####
 library(tidytuesdayR)
 library(tidyverse)
-library(ggridges)
+library(ggridges) 
+#https://www.datanovia.com/en/blog/elegant-visualization-of-density-distribution-in-r-using-ridgeline/ 
 library(skimr)
 
 
