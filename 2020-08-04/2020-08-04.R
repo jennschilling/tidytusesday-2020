@@ -372,9 +372,11 @@ footer <- ggplot() +
 combo_plot <- plot_grid(title, plots, footer, ncol = 1, 
                         rel_heights = c(0.10, 1, 0.10))
 
+combo_plot
+
 ggsave("2020-08-04\\top10_european_energy.png", 
        combo_plot, 
-       width = 11, height = 8, dpi = 100)                     
+       width = 14, height = 8, dpi = 100)                     
 
 
 #### For Instagram ####
