@@ -10,6 +10,7 @@ library(skimr)
 library(extrafont)
 library(cowplot)
 library(ggrepel)
+library(ggtext)
 
 # Load  fonts
 loadfonts(device = "win", quiet = TRUE)
@@ -162,7 +163,7 @@ top10_plot <- ggplot(rankings_top10) +
                 label = label), 
             hjust = -0.2,
             show.legend = FALSE,
-            family = "Verdana",
+            family = "Candara",
             size = 3.5) +
   # Beginning of line labels
   geom_text(data = filter(rankings_top10, year == 2016),
@@ -173,7 +174,7 @@ top10_plot <- ggplot(rankings_top10) +
                 label = rank_label), 
             hjust = 3,
             show.legend = FALSE,
-            family = "Verdana",
+            family = "Candara",
             size = 3.5)  +
   scale_y_reverse() +
   labs(x = "",
@@ -191,9 +192,9 @@ top10_plot <- ggplot(rankings_top10) +
     axis.line = element_blank(),
     axis.ticks = element_blank(),
     axis.text.y = element_blank(),
-    axis.text.x = element_text(color = "black"),
+    axis.text.x = element_text(color = "black", size = 12),
     # Customize Font
-    text = element_text(family = "Verdana", size = 10)#,
+    text = element_text(family = "Candara", size = 12)#,
     # Shift title
     # plot.title = element_text(hjust = -0.05),
     # plot.subtitle = element_text(hjust = -0.055)
@@ -233,7 +234,7 @@ renew_plot <- ggplot(energy_types_top10_renew) +
                 label = paste(sprintf("%.0f", percent_renew*100), 
                               "", sep = "%")),
             vjust = -0.15,
-            family = "Verdana",
+            family = "Candara",
             size = 3) +
   facet_wrap(. ~ reorder(country_name, country_order), 
              nrow = 5,
@@ -267,9 +268,9 @@ renew_plot <- ggplot(energy_types_top10_renew) +
     strip.background = element_blank(),
     strip.text = element_text(face = "bold"),
     # Customize Font
-    #axis.text.y = element_text(family = "Verdana", size = 8),
-    axis.text.x = element_text(family = "Verdana", size = 10),
-    text = element_text(family = "Verdana", size = 10),
+    #axis.text.y = element_text(family = "Candara", size = 8),
+    axis.text.x = element_text(family = "Candara", size = 10),
+    text = element_text(family = "Candara", size = 10),
     # Shift title
     plot.title = element_text(hjust = -0.1)
   )
@@ -289,11 +290,11 @@ renew_plot2 <- ggplot(energy_types_top10_renew,
               position = position_jitter(seed = 1)) +
   # geom_text_repel(position = position_jitter(seed = 1),
   #           vjust = -0.1,
-  #           family = "Verdana",
+  #           family = "Candara",
   #           size = 3) +
   geom_text_repel(position = position_jitter(seed = 1),
             vjust = -0.1,
-            family = "Verdana",
+            family = "Candara",
             size = 3) +
   scale_y_continuous(limits = c(0, 1), 
                      labels = scales::percent, 
@@ -327,9 +328,9 @@ renew_plot2 <- ggplot(energy_types_top10_renew,
     strip.background = element_blank(),
     strip.text = element_text(face = "bold"),
     # Customize Font
-    axis.text.y = element_text(family = "Verdana", size = 8),
-    axis.text.x = element_text(family = "Verdana", size = 10),
-    text = element_text(family = "Verdana", size = 10)#,
+    axis.text.y = element_text(family = "Candara", size = 12),
+    axis.text.x = element_text(family = "Candara", size = 12),
+    text = element_text(family = "Candara", size = 12)#,
     # Shift title
     # plot.title = element_text(hjust = -0.2)
   )
@@ -351,7 +352,7 @@ title <- ggplot() +
     panel.grid.minor = element_blank(),
     # Remove panel background
     panel.background = element_blank(),
-    text = element_text(family = "Verdana", size = 14)) 
+    text = element_text(family = "Candara", size = 14)) 
 
 # Footer & Citation
 footer <- ggplot() + 
@@ -366,10 +367,103 @@ footer <- ggplot() +
     panel.background = element_blank(),
     plot.subtitle = element_text(hjust = 1),
     plot.caption = element_text(hjust = 0),
-    text = element_text(family = "Verdana", size = 10))
+    text = element_text(family = "Candara", size = 10))
 
-combo_plot <- plot_grid(title, plots, footer, ncol = 1, rel_heights = c(0.10, 1, 0.10))
+combo_plot <- plot_grid(title, plots, footer, ncol = 1, 
+                        rel_heights = c(0.10, 1, 0.10))
 
 ggsave("2020-08-04\\top10_european_energy.png", 
        combo_plot, 
        width = 11, height = 8, dpi = 100)                     
+
+
+#### For Instagram ####
+
+# Title Slide
+insta_title <- ggplot() + 
+  geom_richtext(aes(x = 5, 
+                    y = 7, 
+                    label = "<b style='font-size:30px; font-family:Candara'>
+                    #TidyTuesday <br> 04 August 2020 <br> 
+                    European Energy Production</b>",
+                    label.color = NA)) +
+  
+  geom_richtext(aes(x = 5, 
+                    y = 5, 
+                    label = "<b style='font-size:25px; font-family:Candara'>
+                    Investigating the top ten energy producers in<br> Europe 
+                    and their production of renewable energy.</b>",
+                    label.color = NA)) +
+  xlim(0, 10) +
+  ylim(0, 10) +
+  theme(
+    # Hide panel borders and remove grid lines
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove panel background
+    panel.background = element_blank(),
+    # Remove y-axis
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.line.y = element_blank(),
+    # Remove x-axis
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),
+    axis.line.x = element_blank(),
+  ) 
+
+ggsave("2020-08-04\\title.png", 
+       insta_title, 
+       width = 6, height = 6, dpi = 100)
+
+# Ending Slide
+insta_end <- ggplot() + 
+  geom_richtext(aes(x = 5, 
+                    y = 6, 
+                    label = "<b style='font-size:30px; font-family:Candara'>
+                    #TidyTuesday | 04 August 2020 
+                    <br><br> Jenn Schilling | jennschilling.me",
+                    label.color = NA)) +
+  
+  geom_richtext(aes(x = 5, 
+                    y = 4, 
+                    label = "<p style='font-size:20px; font-family:Candara'>
+                    <b>Source:</b> Eurostat",
+                    label.color = NA)) +
+  xlim(0, 10) +
+  ylim(0, 10) +
+  theme(
+    # Hide panel borders and remove grid lines
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove panel background
+    panel.background = element_blank(),
+    # Remove y-axis
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.line.y = element_blank(),
+    # Remove x-axis
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),
+    axis.line.x = element_blank(),
+  )
+
+ggsave("2020-08-04\\end.png", 
+       insta_end, 
+       width = 6, height = 6, dpi = 100)
+
+ggsave("2020-08-04\\top10plot.png", 
+       top10_plot, 
+       width = 7, height = 7, dpi = 100)
+
+ggsave("2020-08-04\\renewplot.png", 
+       renew_plot2, 
+       width = 7, height = 7, dpi = 100)
+
+

@@ -432,9 +432,6 @@ ggsave("2020-07-28\\tree.png",
 
 # Ending Slide
 
-
-
-
 insta.end <- ggplot() + 
   geom_richtext(aes(x = 5, 
                     y = 9, 
