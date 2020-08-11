@@ -414,7 +414,7 @@ insta_title <- ggplot() +
     axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     axis.title.x = element_blank(),
-    axis.line.x = element_blank(),
+    axis.line.x = element_blank()
   ) 
 
 ggsave("2020-08-04\\title.png", 
@@ -453,7 +453,7 @@ insta_end <- ggplot() +
     axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     axis.title.x = element_blank(),
-    axis.line.x = element_blank(),
+    axis.line.x = element_blank()
   )
 
 ggsave("2020-08-04\\end.png", 
