@@ -74,7 +74,7 @@ ggplot(avatar.data %>%
             num_chapters = n()) %>%
   mutate(num_books = n_distinct(book)) %>%
   filter(num_chapters > 5)) +
-  geom_point(aes(x = num_chapters, y = avg_rating, color = character)) +
+  geom_jitter(aes(x = num_chapters, y = avg_rating, color = character), width = 1) +
   facet_wrap(~ book) +
   theme_bw()
 
@@ -85,10 +85,8 @@ ggplot(avatar.data %>%
          group_by(book, chapter_num) %>%
          summarise(avg_rating = mean(imdb_rating),
                    num_characters = n())) +
-  geom_point(aes(x = num_characters, y = avg_rating)) +
+  geom_jitter(aes(x = num_characters, y = avg_rating)) +
   facet_wrap(~ book) +
   theme_bw()
-
-
 
 
