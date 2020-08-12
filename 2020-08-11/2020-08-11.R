@@ -177,6 +177,7 @@ ggplot(avatar.total.words.main) +
   theme_avatar(text.font = "Slayer")
 
 # What are they saying?
+
 avatar.word.freq.main %>%
   filter(freq >= 0.005) %>%
   filter(character == "Sokka") %>%
@@ -201,3 +202,9 @@ ggplot() +
        title = "Aang") +
   scale_fill_avatar(palette = "AirNomads") +
   theme_avatar(text.font = "Slayer")
+
+# Ideas
+# Look at who speaks the most out of the main characters by episode, then
+# look at ratings
+# Lollipop type plot with average rating for book as baseline and episode
+# ratings up or down from the average
