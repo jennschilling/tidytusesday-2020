@@ -10,9 +10,12 @@ library(skimr)
 library(extrafont)
 library(cowplot)
 library(ggtext)
+library(tvthemes)
 
 # Load  fonts
-loadfonts(device = "win", quiet = TRUE)
+import_avatar()
+
+loadfonts(quiet = TRUE)
 
 
 #### Get the Data ####
@@ -49,8 +52,9 @@ ggplot(avatar.data %>%
          select(director, book, chapter, chapter_num, imdb_rating) %>%
          unique(.) ) +
   geom_point(aes(x = chapter_num, y = imdb_rating, color = director)) +
+  scale_color_avatar() +
   facet_grid(book ~ director) +
-  theme_bw()
+  theme_avatar()
 
 ggplot(avatar.data %>%
   filter(!is.na(imdb_rating)) %>%
@@ -62,7 +66,8 @@ ggplot(avatar.data %>%
   mutate(num_books = n_distinct(book))) +
   geom_point(aes(x = num_chapters, y = avg_rating, size = num_books, color = director)) +
   facet_grid(~ book) +
-  theme_bw()
+  scale_color_avatar() +
+  theme_avatar()
 
 
 ggplot(avatar.data %>%
@@ -76,7 +81,8 @@ ggplot(avatar.data %>%
   filter(num_chapters > 5)) +
   geom_jitter(aes(x = num_chapters, y = avg_rating, color = character), width = 1) +
   facet_wrap(~ book) +
-  theme_bw()
+#  scale_color_avatar() +
+  theme_avatar()
 
 ggplot(avatar.data %>%
          filter(!is.na(imdb_rating)) %>%
@@ -87,6 +93,7 @@ ggplot(avatar.data %>%
                    num_characters = n())) +
   geom_jitter(aes(x = num_characters, y = avg_rating)) +
   facet_wrap(~ book) +
-  theme_bw()
+  scale_color_avatar() +
+  theme_avatar()
 
 
