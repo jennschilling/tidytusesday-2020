@@ -170,7 +170,9 @@ ggplot(avatar.total.words.main) +
            stat = "identity") +
   coord_flip() +
   labs(y = "Number of Words",
-       x = "") +
+       x = "",
+       title = "Who says the most in Avatar: The Last Airbender?",
+       subtitle = "Male characters say more than female characters.") +
   scale_fill_avatar(palette = "EarthKingdom") +
   theme_avatar(text.font = "Slayer")
 
