@@ -203,8 +203,70 @@ ggplot() +
   scale_fill_avatar(palette = "AirNomads") +
   theme_avatar(text.font = "Slayer")
 
-# Ideas
-# Look at who speaks the most out of the main characters by episode, then
-# look at ratings
-# Lollipop type plot with average rating for book as baseline and episode
-# ratings up or down from the average
+# Which of the main characters talks the most in each episode?
+# Include stop words
+avatar.char.episode <- avatar.data.tokenize.main %>%
+  count(book, chapter_num, imdb_rating, character, nation, gender, word) %>%
+  group_by(book, chapter_num, imdb_rating, character, nation, gender) %>%
+  summarise(word_count = sum(n)) %>%
+  ungroup() %>%
+  group_by(book, chapter_num, imdb_rating) %>%
+  filter(word_count == max(word_count))
+
+# Ratings by Chapter, Color by Character who Speaks Most, Graph for each Book
+
+avatar.char.episode %>%
+  filter(book == "Water") %>%
+ggplot() +
+  geom_bar(aes(x = chapter_num, y = imdb_rating, fill = character), stat = "identity", position = "dodge") +
+  scale_fill_avatar(palette = "WaterTribe") +
+  labs(x = "Chapter",
+       y = "IMDB Rating",
+       title = "Ratings by Chapter for Water Book",
+       subtitle = "Color shows Character Who Said the Most") +
+  theme_avatar(text.font = "Slayer")
+
+avatar.char.episode %>%
+  filter(book == "Earth") %>%
+  ggplot() +
+  geom_bar(aes(x = chapter_num, y = imdb_rating, fill = character), stat = "identity", position = "dodge") +
+  scale_fill_avatar(palette = "EarthKingdom") +
+  labs(x = "Chapter",
+       y = "IMDB Rating",
+       title = "Ratings by Chapter for Earth Book",
+       subtitle = "Color shows Character Who Said the Most") +
+  theme_avatar(text.font = "Slayer")
+
+
+avatar.char.episode %>%
+  filter(book == "Fire") %>%
+  ggplot() +
+  geom_bar(aes(x = chapter_num, y = imdb_rating, fill = character), stat = "identity", position = "dodge") +
+  scale_fill_avatar(palette = "FireNation") +
+  labs(x = "Chapter",
+       y = "IMDB Rating",
+       title = "Ratings by Chapter for Fire Book",
+       subtitle = "Color shows Character Who Said the Most") +
+  theme_avatar(text.font = "Slayer")
+
+# Heatmap View
+
+# Get characters who speak the most to make levels
+char.most <- avatar.char.episode %>%
+  ungroup() %>%
+  count(character) %>%
+  arrange(n) %>%
+  select(character) %>%
+  as.list(.)
+
+avatar.char.episode %>%
+  mutate(character = factor(character, levels=char.most$character, ordered=TRUE)) %>%
+  ggplot() +
+  geom_tile(aes(x = chapter_num, y = character, fill = imdb_rating)) +
+  facet_wrap(~book) +  
+  labs(x = "Chapter",
+       y = "Character who Spoke the Most",
+       title = "Ratings by Chapter and Book",
+       subtitle = "") +
+  theme_avatar(text.font = "Slayer")
+
