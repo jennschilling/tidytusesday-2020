@@ -260,13 +260,21 @@ char.most <- avatar.char.episode %>%
   as.list(.)
 
 avatar.char.episode %>%
+  filter(!is.na(imdb_rating)) %>%
   mutate(character = factor(character, levels=char.most$character, ordered=TRUE)) %>%
   ggplot() +
   geom_tile(aes(x = chapter_num, y = character, fill = imdb_rating)) +
+#  geom_text(aes(x = chapter_num, y = character, label = imdb_rating), color = "white") +
+  scale_fill_gradient(limits = c(7,  10), 
+                      low = "#ecb100", high = "#a10000" #fire
+                      #low = "#afb5b8", high = "#174d79" # water
+                      #low = "#d2cfab", high = "#015e05" #earth
+                      ) +
   facet_wrap(~book) +  
   labs(x = "Chapter",
-       y = "Character who Spoke the Most",
-       title = "Ratings by Chapter and Book",
-       subtitle = "") +
+       y = "",
+       title = "IMDB Rating for each chapter",
+       subtitle = "The character who spoke most in the chapter is shown on the y-axis") +
   theme_avatar(text.font = "Slayer")
+
 
