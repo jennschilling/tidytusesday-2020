@@ -276,7 +276,7 @@ avatar.char.episode %>%
   labs(x = "Chapter",
        y = "",
        title = "IMDB Rating for each chapter by character who spoke most",
-       caption = "TidyTuesday - 11 Aug 2020 - Data: appa - Designer: Jenn Schilling - jennschilling.me ") +
+       caption = "TidyTuesday - 11 Aug 2020 - Data: appa - Analysis: Jenn Schilling - jennschilling.me ") +
   theme_avatar(text.font = "Slayer",
                legend.position = "bottom") +
   theme(legend.justification = "center",
