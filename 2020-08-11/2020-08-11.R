@@ -249,6 +249,8 @@ avatar.char.episode %>%
        subtitle = "Color shows Character Who Said the Most") +
   theme_avatar(text.font = "Slayer")
 
+#### Final Plot ####
+
 # Heatmap View
 
 # Get characters who speak the most to make levels
@@ -266,15 +268,29 @@ avatar.char.episode %>%
   geom_tile(aes(x = chapter_num, y = character, fill = imdb_rating)) +
 #  geom_text(aes(x = chapter_num, y = character, label = imdb_rating), color = "white") +
   scale_fill_gradient(limits = c(7,  10), 
-                      low = "#ecb100", high = "#a10000" #fire
+                      low = "#ecb100", high = "#a10000", #fire,
                       #low = "#afb5b8", high = "#174d79" # water
                       #low = "#d2cfab", high = "#015e05" #earth
                       ) +
   facet_wrap(~book) +  
   labs(x = "Chapter",
        y = "",
-       title = "IMDB Rating for each chapter",
-       subtitle = "The character who spoke most in the chapter is shown on the y-axis") +
-  theme_avatar(text.font = "Slayer")
+       title = "IMDB Rating for each chapter by character who spoke most",
+       caption = "TidyTuesday - 11 Aug 2020 - Data: appa - Designer: Jenn Schilling - jennschilling.me ") +
+  theme_avatar(text.font = "Slayer",
+               legend.position = "bottom") +
+  theme(legend.justification = "center",
+        legend.background = element_rect(color = NA),
+        legend.title = element_text(vjust = 0.9),
+        strip.text.x = element_text(size = 10),
+        plot.title = element_text(hjust = -7),
+        axis.text.y = element_text(size = 10))
+
+ggsave("2020-08-11\\avatar.ratings.characters.png",
+       plot = last_plot(),
+       device = "png",
+       width = 10,
+       height = 8,
+       dpi = 100)
 
 
