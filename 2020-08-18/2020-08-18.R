@@ -96,4 +96,4 @@ plants %>%
 # Timeline by last year seen, continent, threat, action, group
 # Dots for each plant
 # Color/position by continent
-# How to encode group, threat, action ???
+# How to encode group, threat, action ??? 
