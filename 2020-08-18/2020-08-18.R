@@ -96,4 +96,14 @@ plants %>%
 # Timeline by last year seen, continent, threat, action, group
 # Dots for each plant
 # Color/position by continent
-# How to encode group, threat, action ??? 
+# How to encode group, threat, action ???
+
+# Leave out 15 with missing year
+
+# Use geom_point with 
+# y = increment of count to stack points / index of species by year and continent
+# x = year_last_seen combined with continent somehow
+# shape could by group since there are only 6 and most are flowering plant
+# threat could be size 
+#  or if I use all the same shape (circles) I could use a line position off the circle to indicate threat
+# action could be color - only 6, most are unknown, could make unknown a grey/neutral color
