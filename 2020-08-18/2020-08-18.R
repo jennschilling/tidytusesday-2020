@@ -107,3 +107,47 @@ plants %>%
 # threat could be size 
 #  or if I use all the same shape (circles) I could use a line position off the circle to indicate threat
 # action could be color - only 6, most are unknown, could make unknown a grey/neutral color
+
+# PROBLEM - multiple threats and multiple actions for a single plant
+
+plants.long <- plants %>%
+  filter(!is.na(year_last_seen)) %>%
+  mutate(year_last_seen = factor(year_last_seen, levels = c("Before 1900",
+                                                            "1900-1919",
+                                                            "1920-1939",
+                                                            "1940-1959",
+                                                            "1960-1979",
+                                                            "1980-1999",
+                                                            "2000-2020"))) %>%
+  pivot_longer(threat_AA:threat_NA, names_to = "threat") %>%
+  separate(threat, c("threat", "threat_type"), sep = "_") %>%
+  select(-threat) %>% 
+  filter(value == 1) %>%
+  select(-value) %>%
+  pivot_longer(action_LWP:action_NA, names_to = "action") %>%
+  separate(action, c("action", "action_type"), sep = "_") %>%
+  select(-action) %>% 
+  filter(value == 1) %>%
+  select(-value)
+  
+  plants %>%
+    filter(!is.na(year_last_seen)) %>%
+    mutate(year_last_seen = factor(year_last_seen, levels = c("Before 1900",
+                                                              "1900-1919",
+                                                              "1920-1939",
+                                                              "1940-1959",
+                                                              "1960-1979",
+                                                              "1980-1999",
+                                                              "2000-2020"))) %>%
+  ggplot() +
+  #geom_histogram(aes(x = year_last_seen), stat = "count") 
+  geom_dotplot(aes(x = year_last_seen,
+                   fill = continent
+                 ), 
+               binwidth = 0.1,
+               dotsize = 0.5,
+               stackgroups = FALSE,
+               position = position_dodge(width=1),
+               method = "histodot",
+               stackratio = 2) 
+  
