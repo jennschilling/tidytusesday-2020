@@ -168,13 +168,15 @@ plants.long <- plants %>%
                    y = index, 
                    color = continent),
                position =  position_dodge(width=1)) +
-    geom_vline(xintercept = seq(1.5, 6.5, 1)) +
+    geom_vline(xintercept = seq(0.5, 7.5, 1)) +
     scale_x_discrete(position = "top") +
     scale_y_continuous(expand = c(0,1)) +
     theme_bw() +
     theme(axis.text.y = element_blank(),
           axis.title = element_blank(),
-          axis.ticks = element_blank())
+          axis.ticks = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank())
   
 
   
