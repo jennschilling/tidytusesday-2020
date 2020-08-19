@@ -151,3 +151,30 @@ plants.long <- plants %>%
                method = "histodot",
                stackratio = 2) 
   
+  plants %>%
+    filter(!is.na(year_last_seen)) %>%
+    mutate(year_last_seen = factor(year_last_seen, levels = c("Before 1900",
+                                                              "1900-1919",
+                                                              "1920-1939",
+                                                              "1940-1959",
+                                                              "1960-1979",
+                                                              "1980-1999",
+                                                              "2000-2020"))) %>%
+    group_by(year_last_seen, continent) %>%
+    mutate(index = row_number()) %>%
+    ungroup() %>%
+    ggplot() +
+    geom_point(aes(x = year_last_seen, 
+                   y = index, 
+                   color = continent),
+               position =  position_dodge(width=1)) +
+    geom_vline(xintercept = seq(1.5, 6.5, 1)) +
+    scale_x_discrete(position = "top") +
+    scale_y_continuous(expand = c(0,1)) +
+    theme_bw() +
+    theme(axis.text.y = element_blank(),
+          axis.title = element_blank(),
+          axis.ticks = element_blank())
+  
+
+  
