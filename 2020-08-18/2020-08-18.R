@@ -160,23 +160,40 @@ plants.long <- plants %>%
                                                               "1960-1979",
                                                               "1980-1999",
                                                               "2000-2020"))) %>%
+    mutate(group = factor(group, levels = c("Flowering Plant",
+                                            "Algae",
+                                            "Conifer",
+                                            "Cycad",
+                                            "Ferns and Allies",
+                                            "Mosses"))) %>%
+    arrange(group) %>%
     group_by(year_last_seen, continent) %>%
     mutate(index = row_number()) %>%
-    ungroup() %>%
+    ungroup() %>% 
     ggplot() +
     geom_point(aes(x = year_last_seen, 
                    y = index, 
-                   color = continent),
-               position =  position_dodge(width=1)) +
-    geom_vline(xintercept = seq(0.5, 7.5, 1)) +
-    scale_x_discrete(position = "top") +
+                   group = continent,
+                   color = continent,
+                   shape = group),
+               position =  position_dodge(width=1),
+               size = 3) +
+    geom_vline(xintercept = seq(1.5, 6.5, 1), color = "#A9A9A9") +
+    scale_x_discrete(position = "bottom") +
     scale_y_continuous(expand = c(0,1)) +
+    scale_color_brewer(palette = "Dark2", aesthetics = "color") +
+    scale_shape_manual(values = c(19, 12, 13, 10, 14, 7)) +
+    coord_flip() +
+   # geom_hline(yintercept = 0) +
+   # geom_hline(yintercept = 56) +
     theme_bw() +
-    theme(axis.text.y = element_blank(),
+    theme(axis.text.x = element_blank(),
           axis.title = element_blank(),
           axis.ticks = element_blank(),
           panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank())
+          panel.grid.minor = element_blank()#,
+          #panel.border = element_blank()
+          ) 
   
 
   
