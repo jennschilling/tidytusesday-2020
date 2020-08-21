@@ -130,29 +130,11 @@ plants.long <- plants %>%
   filter(value == 1) %>%
   select(-value)
   
-  plants %>%
-    filter(!is.na(year_last_seen)) %>%
-    mutate(year_last_seen = factor(year_last_seen, levels = c("Before 1900",
-                                                              "1900-1919",
-                                                              "1920-1939",
-                                                              "1940-1959",
-                                                              "1960-1979",
-                                                              "1980-1999",
-                                                              "2000-2020"))) %>%
-  ggplot() +
-  #geom_histogram(aes(x = year_last_seen), stat = "count") 
-  geom_dotplot(aes(x = year_last_seen,
-                   fill = continent
-                 ), 
-               binwidth = 0.1,
-               dotsize = 0.5,
-               stackgroups = FALSE,
-               position = position_dodge(width=1),
-               method = "histodot",
-               stackratio = 2) 
   
-  plants %>%
+# Create data frame with factor levels and index of each plant needed for creating my own dot plot
+plants.dat <-  plants %>%
     filter(!is.na(year_last_seen)) %>%
+    mutate(num_threats = select(., threat_AA:threat_NA) %>% rowSums()) %>%
     mutate(year_last_seen = factor(year_last_seen, levels = c("Before 1900",
                                                               "1900-1919",
                                                               "1920-1939",
@@ -160,40 +142,86 @@ plants.long <- plants %>%
                                                               "1960-1979",
                                                               "1980-1999",
                                                               "2000-2020"))) %>%
+    mutate(continent = factor(continent, levels = c("Africa",
+                                                    "Asia",
+                                                    "Europe",
+                                                    "North America",
+                                                    "Oceania",
+                                                    "South America"))) %>%
     mutate(group = factor(group, levels = c("Flowering Plant",
                                             "Algae",
                                             "Conifer",
                                             "Cycad",
                                             "Ferns and Allies",
                                             "Mosses"))) %>%
-    arrange(group) %>%
+    arrange(group, num_threats) %>%
     group_by(year_last_seen, continent) %>%
     mutate(index = row_number()) %>%
-    ungroup() %>% 
-    ggplot() +
-    geom_point(aes(x = year_last_seen, 
+    ungroup()
+
+# Create data frame of mean number of threats (didn't end up using this)
+plants.agg <- plants.dat %>%
+  group_by(year_last_seen, continent) %>%
+  summarise(max_index = max(index) + 10,
+            avg_num_threats = mean(num_threats))
+
+# Final plot
+ggplot(data = plants.dat) +
+    geom_point(aes(x = fct_rev(year_last_seen), 
                    y = index, 
-                   group = continent,
+                   group = desc(continent),
                    color = continent,
-                   shape = group),
-               position =  position_dodge(width=1),
-               size = 3) +
-    geom_vline(xintercept = seq(1.5, 6.5, 1), color = "#A9A9A9") +
+                   shape = group#,
+                  # size = num_threats
+                   ),
+               position =  position_dodge(width = 1),
+               size = 3.5
+               ) +
+    # geom_text(data = plants.agg,
+    #           aes(x = fct_rev(year_last_seen),
+    #               y = max_index,
+    #               group = desc(continent),
+    #               label = paste(round(avg_num_threats, digits = 1),
+    #                             "number of threats")),
+    #           position = position_dodge(width = 1)) +
+    geom_vline(xintercept = seq(1.5, 6.5, 1), color = "#666666") +
     scale_x_discrete(position = "bottom") +
     scale_y_continuous(expand = c(0,1)) +
-    scale_color_brewer(palette = "Dark2", aesthetics = "color") +
+   # scale_color_brewer(palette = "Greens", aesthetics = "color") +
+    scale_color_manual(values = c("#a1d99b",
+                                  "#74c476",
+                                  "#41ab5d",
+                                  "#238b45",
+                                  "#006d2c",
+                                  "#00441b")) +
     scale_shape_manual(values = c(19, 12, 13, 10, 14, 7)) +
+    guides(color = guide_legend(title = "Continent of Origin"),
+           shape = guide_legend(title = "Taxonomic Group"),
+           size = guide_legend(title = "Number of Threats")) +
+    labs(title = "Plant extinction over time by continent of origin and taxonomic group",
+         subtitle = "Each shape represents a single plant.",
+         caption = "#TidyTuesday 18 Aug 2020 | Data: International Union for Conservation of Nature | Designer: Jenn Schilling | jennschilling.me") +
     coord_flip() +
-   # geom_hline(yintercept = 0) +
-   # geom_hline(yintercept = 56) +
     theme_bw() +
-    theme(axis.text.x = element_blank(),
-          axis.title = element_blank(),
+    theme(axis.title = element_blank(),
           axis.ticks = element_blank(),
+          axis.text.x = element_blank(),
           panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank()#,
-          #panel.border = element_blank()
+          panel.grid.minor = element_blank(),
+          panel.border = element_blank(),
+          panel.background = element_rect(fill = "#F8F8F8", color = "#F8F8F8"),
+          plot.background = element_rect(fill = "#F8F8F8", color = "#F8F8F8"),
+          legend.background = element_rect(fill = "#F8F8F8", color = "#F8F8F8"),
+          legend.key =  element_rect(fill = "#F8F8F8", color = "#F8F8F8"),
+          plot.caption = element_text(hjust = 1),
+          plot.title.position = "plot",
+          plot.caption.position =  "plot"
           ) 
   
-
+ggsave("2020-08-18\\extinct.plants.png",
+       plot = last_plot(),
+       device = "png",
+       width = 10,
+       height = 8,
+       dpi = 100)
   
