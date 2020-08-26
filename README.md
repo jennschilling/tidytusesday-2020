@@ -3,6 +3,9 @@ Repository for #TidyTuesday work
 
 Data Source: https://github.com/rfordatascience/tidytuesday
 
+# 18 August 2020
+![](https://github.com/jennschilling/tidytusesday/blob/master/2020-08-18/extinct.plants.png)
+
 # 11 August 2020
 ![](https://github.com/jennschilling/tidytusesday/blob/master/2020-08-11/avatar.ratings.characters.png)
 
