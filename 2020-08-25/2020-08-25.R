@@ -10,10 +10,11 @@ library(skimr)
 library(extrafont)
 library(cowplot)
 library(ggtext)
-library(tidytext)
+library(stringr)
 
 # Load  fonts
-loadfonts(quiet = TRUE)
+font_import()
+loadfonts(device = "pdf")
 
 
 #### Get the Data ####
@@ -53,43 +54,103 @@ ingredients_agg <- ingredients_list %>%
 ingredients_agg_filter <- ingredients_agg %>%
   group_by(course) %>%
   arrange(-n) %>%
-  filter(row_number() <= 5)
+  filter(row_number() <= 5) %>%
+  ungroup() %>%
+  mutate(ingredient = str_to_title(ingredient),
+         course = str_to_title(course))
 
 #### Graph ####
 
 ingredients_agg_filter %>%
-  filter(course == 'appetizer') %>%
+  filter(course == 'Appetizer') %>%
 ggplot() +
   geom_bar(aes(y = reorder(ingredient, n),
                x = n,
                fill = mean_rating),
-           stat = 'identity') +
-  facet_wrap(~course) +
+           stat = 'identity',
+           show.legend = FALSE) +
+  scale_x_continuous(limits = c(0,13), 
+                     expand = c(0,0.02),
+                     breaks = c(2, 4, 6, 8, 10, 12)) +
   scale_fill_gradient(limits = c(8.14, 8.56),
-                      low = '#bcbddc',
-                      high = '#54278f')
+                      low = '#E9A343',
+                      high = '#D55D28') +
+  labs(title = "Number of Times an Ingredient was used in the <em>Appetizer</em> Course",
+       subtitle = "Color represents the average rating of episodes using the ingredient.
+       <b style='color:#D55D28'>Higher ratings.</b>
+       <b style='color:#E9A343'>Lower ratings.</b>") +
+  theme_bw() +
+  theme(axis.title = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line = element_line(),
+        plot.title = element_markdown(),
+        plot.subtitle = element_markdown(),
+        plot.caption = element_markdown(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        plot.title.position = "plot",
+        plot.caption.position =  "plot")
+
 
 ingredients_agg_filter %>%
-  filter(course == 'entree') %>%
+  filter(course == 'Entree') %>%
   ggplot() +
   geom_bar(aes(y = reorder(ingredient, n),
                x = n,
                fill = mean_rating),
-           stat = 'identity') +
-  facet_wrap(~course) +
+           stat = 'identity',
+           show.legend = FALSE) +
+  scale_x_continuous(limits = c(0,13), 
+                     expand = c(0,0.02),
+                     breaks = c(2, 4, 6, 8, 10, 12)) +
   scale_fill_gradient(limits = c(8.14, 8.56),
-                      low = '#bcbddc',
-                      high = '#54278f')
+                      low = '#E9A343',
+                      high = '#D55D28') +
+  labs(title = "Number of Times an Ingredient was used in the <em>Entree</em> Course",
+       subtitle = "Color represents the average rating of episodes using the ingredient.") +
+  theme_bw() +
+  theme(axis.title = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line = element_line(),
+        plot.title = element_markdown(),
+        plot.subtitle = element_markdown(),
+        plot.caption = element_markdown(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        plot.title.position = "plot",
+        plot.caption.position =  "plot")
 
 ingredients_agg_filter %>%
-  filter(course == 'dessert') %>%
+  filter(course == 'Dessert') %>%
   ggplot() +
   geom_bar(aes(y = reorder(ingredient, n),
                x = n,
                fill = mean_rating),
-           stat = 'identity') +
-  facet_wrap(~course) +
+           stat = 'identity',
+           show.legend = FALSE) +
+  scale_x_continuous(limits = c(0,13), 
+                     expand = c(0,0.02),
+                     breaks = c(2, 4, 6, 8, 10, 12)) +
   scale_fill_gradient(limits = c(8.14, 8.56),
-                      low = '#bcbddc',
-                      high = '#54278f')
+                      low = '#E9A343',
+                      high = '#D55D28') +
+  labs(title = "Number of Times an Ingredient was used in the <em>Dessert</em> Course",
+       subtitle = "Color represents the average rating of episodes using the ingredient.",
+       caption = "<b style='color:#D55D28'>The highest average rating was 8.56.</b><br>
+                  <b style='color:#E9A343'>The lowest average rating was 8.14.</b>") +
+  theme_bw() +
+  theme(axis.title = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line = element_line(),
+        plot.title = element_markdown(),
+        plot.subtitle = element_markdown(),
+        plot.caption = element_markdown(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        plot.title.position = "plot",
+        plot.caption.position =  "plot",
+        text = element_text(family = 'bahnschrift'))
 
