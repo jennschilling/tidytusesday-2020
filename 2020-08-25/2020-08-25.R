@@ -13,7 +13,7 @@ library(ggtext)
 library(stringr)
 
 # Load  fonts
-font_import()
+#font_import()
 loadfonts(device = "pdf")
 
 
@@ -61,7 +61,7 @@ ingredients_agg_filter <- ingredients_agg %>%
 
 #### Graph ####
 
-ingredients_agg_filter %>%
+app_plot <- ingredients_agg_filter %>%
   filter(course == 'Appetizer') %>%
 ggplot() +
   geom_bar(aes(y = reorder(ingredient, n),
@@ -69,77 +69,13 @@ ggplot() +
                fill = mean_rating),
            stat = 'identity',
            show.legend = FALSE) +
-  scale_x_continuous(limits = c(0,13), 
+  scale_x_continuous(limits = c(0,14), 
                      expand = c(0,0.02),
                      breaks = c(2, 4, 6, 8, 10, 12)) +
   scale_fill_gradient(limits = c(8.14, 8.56),
                       low = '#E9A343',
                       high = '#D55D28') +
-  labs(title = "Number of Times an Ingredient was used in the <em>Appetizer</em> Course",
-       subtitle = "Color represents the average rating of episodes using the ingredient.
-       <b style='color:#D55D28'>Higher ratings.</b>
-       <b style='color:#E9A343'>Lower ratings.</b>") +
-  theme_bw() +
-  theme(axis.title = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.line = element_line(),
-        plot.title = element_markdown(),
-        plot.subtitle = element_markdown(),
-        plot.caption = element_markdown(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        plot.title.position = "plot",
-        plot.caption.position =  "plot")
-
-
-ingredients_agg_filter %>%
-  filter(course == 'Entree') %>%
-  ggplot() +
-  geom_bar(aes(y = reorder(ingredient, n),
-               x = n,
-               fill = mean_rating),
-           stat = 'identity',
-           show.legend = FALSE) +
-  scale_x_continuous(limits = c(0,13), 
-                     expand = c(0,0.02),
-                     breaks = c(2, 4, 6, 8, 10, 12)) +
-  scale_fill_gradient(limits = c(8.14, 8.56),
-                      low = '#E9A343',
-                      high = '#D55D28') +
-  labs(title = "Number of Times an Ingredient was used in the <em>Entree</em> Course",
-       subtitle = "Color represents the average rating of episodes using the ingredient.") +
-  theme_bw() +
-  theme(axis.title = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.line = element_line(),
-        plot.title = element_markdown(),
-        plot.subtitle = element_markdown(),
-        plot.caption = element_markdown(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        plot.title.position = "plot",
-        plot.caption.position =  "plot")
-
-ingredients_agg_filter %>%
-  filter(course == 'Dessert') %>%
-  ggplot() +
-  geom_bar(aes(y = reorder(ingredient, n),
-               x = n,
-               fill = mean_rating),
-           stat = 'identity',
-           show.legend = FALSE) +
-  scale_x_continuous(limits = c(0,13), 
-                     expand = c(0,0.02),
-                     breaks = c(2, 4, 6, 8, 10, 12)) +
-  scale_fill_gradient(limits = c(8.14, 8.56),
-                      low = '#E9A343',
-                      high = '#D55D28') +
-  labs(title = "Number of Times an Ingredient was used in the <em>Dessert</em> Course",
-       subtitle = "Color represents the average rating of episodes using the ingredient.",
-       caption = "<b style='color:#D55D28'>The highest average rating was 8.56.</b><br>
-                  <b style='color:#E9A343'>The lowest average rating was 8.14.</b>") +
+  labs(title = "<b>Appetizer</b>") +
   theme_bw() +
   theme(axis.title = element_blank(),
         axis.ticks.y = element_blank(),
@@ -152,5 +88,95 @@ ingredients_agg_filter %>%
         panel.border = element_blank(),
         plot.title.position = "plot",
         plot.caption.position =  "plot",
-        text = element_text(family = 'bahnschrift'))
+        text = element_text(family = 'Bahnschrift'))
 
+
+ent_plot <- ingredients_agg_filter %>%
+  filter(course == 'Entree') %>%
+  ggplot() +
+  geom_bar(aes(y = reorder(ingredient, n),
+               x = n,
+               fill = mean_rating),
+           stat = 'identity',
+           show.legend = FALSE) +
+  scale_x_continuous(limits = c(0,14), 
+                     expand = c(0,0.02),
+                     breaks = c(2, 4, 6, 8, 10, 12)) +
+  scale_fill_gradient(limits = c(8.14, 8.56),
+                      low = '#E9A343',
+                      high = '#D55D28') +
+  labs(title = "<b>Entree</b>") +
+  theme_bw() +
+  theme(axis.title = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line = element_line(),
+        plot.title = element_markdown(),
+        plot.subtitle = element_markdown(),
+        plot.caption = element_markdown(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        plot.title.position = "plot",
+        plot.caption.position =  "plot",
+        text = element_text(family = 'Bahnschrift'))
+
+des_plot <- ingredients_agg_filter %>%
+  filter(course == 'Dessert') %>%
+  ggplot() +
+  geom_bar(aes(y = reorder(ingredient, n),
+               x = n,
+               fill = mean_rating),
+           stat = 'identity',
+           show.legend = FALSE) +
+  scale_x_continuous(limits = c(0,14), 
+                     expand = c(0,0.02),
+                     breaks = c(2, 4, 6, 8, 10, 12)) +
+  scale_fill_gradient(limits = c(8.14, 8.56),
+                      low = '#E9A343',
+                      high = '#D55D28') +
+  labs(title = "<b>Dessert</b>",
+       caption = "") +
+  theme_bw() +
+  theme(axis.title = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line = element_line(),
+        plot.title = element_markdown(),
+        plot.subtitle = element_markdown(),
+        plot.caption = element_markdown(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        plot.title.position = "plot",
+        plot.caption.position =  "plot",
+        text = element_text(family = 'Bahnschrift'))
+
+title_theme <- ggplot() +  
+  labs(title ="Most Frequently Used Ingredients by Course",
+       subtitle = "Color represents the average rating of episodes using the ingredient.<br>
+       <b style='color:#D55D28'>Higher ratings.</b>
+       <b style='color:#E9A343'>Lower ratings.</b><br><br>
+       <b style='color:#D55D28'>The highest average rating was 8.56.</b><br>
+        <b style='color:#E9A343'>The lowest average rating was 8.14.</b>") +
+    theme(
+      # Hide panel borders and remove grid lines
+      panel.border = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      # Remove panel background
+      panel.background = element_blank(),
+      # Font and Positioning
+      plot.title = element_markdown(),
+      plot.subtitle = element_markdown(),
+      plot.caption = element_markdown(),
+      text = element_text(family = 'Helvetica')
+     # plot.title.position = "plot",
+    #  plot.caption.position =  "plot"
+    )
+
+plot_grid(title_theme,
+          app_plot,
+          ent_plot,
+          des_plot,
+          ncol = 1,
+          rel_heights = c(0.4, 1, 1, 1)
+          )
