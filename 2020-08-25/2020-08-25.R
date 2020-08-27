@@ -47,7 +47,8 @@ ingredients_list <- ingredients %>%
 ingredients_agg <- ingredients_list %>%
   group_by(course, ingredient) %>%
   summarise(n = n(),
-            mean_rating = mean(episode_rating, na.rm = TRUE)) %>%
+            mean_rating = mean(episode_rating, na.rm = TRUE),
+            med_rating = median(episode_rating, na.rm = TRUE)) %>%
   arrange(-n)
 
 # Get the top five ingredients for each course
@@ -71,7 +72,7 @@ ggplot() +
            show.legend = FALSE) +
   scale_x_continuous(limits = c(0,14), 
                      expand = c(0,0.02),
-                     breaks = c(2, 4, 6, 8, 10, 12)) +
+                     breaks = c(0, 2, 4, 6, 8, 10, 12, 14)) +
   scale_fill_gradient(limits = c(8.14, 8.56),
                       low = '#E9A343',
                       high = '#D55D28') +
@@ -101,7 +102,7 @@ ent_plot <- ingredients_agg_filter %>%
            show.legend = FALSE) +
   scale_x_continuous(limits = c(0,14), 
                      expand = c(0,0.02),
-                     breaks = c(2, 4, 6, 8, 10, 12)) +
+                     breaks = c(0, 2, 4, 6, 8, 10, 12, 14)) +
   scale_fill_gradient(limits = c(8.14, 8.56),
                       low = '#E9A343',
                       high = '#D55D28') +
@@ -130,7 +131,7 @@ des_plot <- ingredients_agg_filter %>%
            show.legend = FALSE) +
   scale_x_continuous(limits = c(0,14), 
                      expand = c(0,0.02),
-                     breaks = c(2, 4, 6, 8, 10, 12)) +
+                     breaks = c(0, 2, 4, 6, 8, 10, 12, 14)) +
   scale_fill_gradient(limits = c(8.14, 8.56),
                       low = '#E9A343',
                       high = '#D55D28') +
@@ -150,13 +151,20 @@ des_plot <- ingredients_agg_filter %>%
         plot.caption.position =  "plot",
         text = element_text(family = 'Bahnschrift'))
 
-title_theme <- ggplot() +  
-  labs(title ="Most Frequently Used Ingredients by Course",
-       subtitle = "Color represents the average rating of episodes using the ingredient.<br>
-       <b style='color:#D55D28'>Higher ratings.</b>
-       <b style='color:#E9A343'>Lower ratings.</b><br><br>
-       <b style='color:#D55D28'>The highest average rating was 8.56.</b><br>
-        <b style='color:#E9A343'>The lowest average rating was 8.14.</b>") +
+# What was the highest rating the show received?
+max(chopped$episode_rating, na.rm = TRUE)
+
+# What was the lowest rating the show received?
+min(chopped$episode_rating, na.rm = TRUE)
+
+title <- ggplot() +  
+  labs(title ="<b>Chopped: How frequently were ingredients used and 
+       how popular were episodes with those ingredients?<b>",
+       subtitle = 
+       "Length represents the number of episodes in which the ingredient was used.<br>
+       Color represents the average IMDB rating of episodes using the ingredient.<br>
+       <b style='color:#E9A343'>The lowest average rating was 8.14 (Fennel).</b>
+       <b style='color:#D55D28'>The highest average rating was 8.56 (Black Garlic & Blueberries).</b>") +
     theme(
       # Hide panel borders and remove grid lines
       panel.border = element_blank(),
@@ -168,15 +176,48 @@ title_theme <- ggplot() +
       plot.title = element_markdown(),
       plot.subtitle = element_markdown(),
       plot.caption = element_markdown(),
-      text = element_text(family = 'Helvetica')
-     # plot.title.position = "plot",
-    #  plot.caption.position =  "plot"
+      text = element_text(family = 'Bahnschrift'),
+      plot.title.position = "plot",
+      plot.caption.position =  "plot"
     )
 
-plot_grid(title_theme,
+footer <- ggplot() +  
+  labs(title ="",
+       caption = "#tidytuesday week 35 | 
+       data: chopped kaggle | 
+       designer: jenn schilling | 
+       jennschilling.me") +
+  theme(
+    # Hide panel borders and remove grid lines
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove panel background
+    panel.background = element_blank(),
+    # Font and Positioning
+    plot.title = element_markdown(),
+    plot.subtitle = element_markdown(),
+    plot.caption = element_markdown(),
+    text = element_text(family = 'Bahnschrift'),
+    plot.title.position = "plot",
+    plot.caption.position =  "plot"
+  )
+
+set_null_device("png") # fixes font and removes warnings
+
+plot_grid(title,
           app_plot,
           ent_plot,
           des_plot,
+          footer,
           ncol = 1,
-          rel_heights = c(0.4, 1, 1, 1)
+          rel_heights = c(0.5, 1, 1, 1, 0.2),
+          align = "v"
           )
+
+ggsave("2020-08-25\\chopped.png",
+       plot = last_plot(),
+       device = "png",
+       width = 10,
+       height = 8,
+       dpi = 100)
