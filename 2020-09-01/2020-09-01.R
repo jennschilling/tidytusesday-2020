@@ -10,7 +10,7 @@ library(skimr)
 library(extrafont)
 library(cowplot)
 library(ggtext)
-library(stringr)
+library(janitor)
 
 # Load  fonts
 #font_import()
@@ -37,3 +37,25 @@ skim(fertilizer) # Year is numeric, 1961 - 2018
 skim(land_use) # Year is character and goes back to BCE
 
 skim(tractor) # Year is character and goes back to BCE
+
+# Make Crop Yield Data Long
+key_crop_yields_long <- key_crop_yields %>% 
+  pivot_longer(cols = 4:last_col(),
+               names_to = "crop", 
+               values_to = "crop_production",
+               values_drop_na = TRUE) %>% 
+  mutate(crop = str_remove_all(crop, " \\(tonnes per hectare\\)")) %>% 
+  set_names(nm = names(.) %>% tolower())
+
+# Look at fertilizer use
+fertilizer_clean <- clean_names(fertilizer) %>% # clean up column names
+  mutate(year = as.numeric(year))
+
+fertilizer_clean %>%
+  filter(!is.na(code)) %>% # remove entities that are not countries
+  filter(year >= 2007 & year <= 2017) %>% # get last 10 years of data
+  ggplot() +
+  geom_point(aes(x = nitrogen_fertilizer_use_kilograms_per_hectare,
+                 y = cereal_yield_tonnes_per_hectare)) +
+  facet_wrap(~year) +
+  theme_classic()
