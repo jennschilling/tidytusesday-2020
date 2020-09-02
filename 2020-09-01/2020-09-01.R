@@ -112,3 +112,74 @@ ggplot(key_crop_yield_chg_bottom) +
 # Timor - Bananas is interesting 
 # Burkina Faso - Cassava shows a bump in the decrease
 # 5 of 10 are Cocoa Beans
+
+#### Uganada Focus ####
+
+uganda_crops <- key_crop_yields_long %>% 
+  filter(entity == 'Uganda')
+
+uganda_fertilizer <- fertilizer_clean %>%
+  filter(entity == 'Uganda')
+
+uganda_arable_land <- clean_names(arable_land) %>%
+  filter(entity == 'Uganda')
+
+uganda_land_use <- clean_names(land_use) %>%
+  filter(entity == 'Uganda')
+
+uganda_tractor <- clean_names(tractor) %>%
+  filter(entity == 'Uganda')
+
+uganda_crops %>%
+  ggplot() +
+  geom_line(aes(x = year,
+                y = crop_production)) +
+  facet_wrap(~crop) +
+  theme_classic()
+
+uganda_fertilizer %>%
+  ggplot() +
+  geom_point(aes(x = nitrogen_fertilizer_use_kilograms_per_hectare,
+                 y = cereal_yield_tonnes_per_hectare)) +
+  geom_text(aes(x = nitrogen_fertilizer_use_kilograms_per_hectare,
+                y = cereal_yield_tonnes_per_hectare,
+                label = year)) +
+  theme_classic()
+
+uganda_arable_land %>%
+  ggplot() +
+  geom_line(aes(x = year,
+                y = arable_land_needed_to_produce_a_fixed_quantity_of_crops_1_0_1961)) +
+  theme_classic()
+
+uganda_land_use %>%
+  filter(!is.na(change_to_land_area_used_for_cereal_production_since_1961)) %>%
+  ggplot() +
+  geom_point(aes(x = year,
+                 y = change_to_land_area_used_for_cereal_production_since_1961))+
+  theme_classic()
+  
+uganda_land_use %>%
+  filter(!is.na(cereal_yield_index)) %>%
+  ggplot() +
+  geom_point(aes(x = year,
+                 y = cereal_yield_index))+
+  theme_classic()
+
+uganda_land_use %>%
+  filter(!is.na(cereal_yield_index)) %>%
+  ggplot() +
+  geom_point(aes(x = year,
+                 y = total_population_gapminder))+
+  theme_classic()
+
+uganda_tractor %>%
+  filter(!is.na(tractors_per_100_sq_km_arable_land)) %>%
+  ggplot() +
+  geom_point(aes(x = tractors_per_100_sq_km_arable_land,
+                 y = cereal_yield_kilograms_per_hectare_kg_per_hectare)) +
+  geom_text(aes(x = tractors_per_100_sq_km_arable_land,
+                y = cereal_yield_kilograms_per_hectare_kg_per_hectare,
+                label = year)) +
+  theme_classic()
+  
