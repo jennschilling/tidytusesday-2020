@@ -59,3 +59,56 @@ fertilizer_clean %>%
                  y = cereal_yield_tonnes_per_hectare)) +
   facet_wrap(~year) +
   theme_classic()
+
+# Look at top increases and decreases in production
+
+# Compute percent change between 1961 and 2018
+key_crop_yields_chg <- key_crop_yields_long %>%
+  pivot_wider(names_from = year,
+              names_prefix = "yr_",
+              values_from = crop_production) %>%
+  mutate(perc_chg = (yr_2018 - yr_1961) / yr_1961) 
+
+# Get top 10 by percent change
+key_crop_yield_chg_top <- key_crop_yields_chg %>% 
+  filter(!is.na(code)) %>%
+  top_n(10, perc_chg) %>%
+  pivot_longer(cols = yr_1961:yr_2018,
+               names_to = "year",
+               values_to = "crop_production",
+               values_drop_na = TRUE) %>%
+  mutate(year = sub("yr_", "", year))
+ 
+# Get bottom 10 by percent change 
+key_crop_yield_chg_bottom <- key_crop_yields_chg %>% 
+  filter(!is.na(code)) %>%
+  top_n(-10, perc_chg) %>%
+  pivot_longer(cols = yr_1961:yr_2018,
+               names_to = "year",
+               values_to = "crop_production",
+               values_drop_na = TRUE) %>%
+  mutate(year = sub("yr_", "", year))
+
+# Graph top 10
+ggplot(key_crop_yield_chg_top) +
+  geom_point(aes(x = year, 
+                 y = crop_production,
+                 color = crop)) +
+  facet_wrap(~entity) +
+  theme_classic()
+
+# Greece - Bananas looks interesting
+# Jordan - Maize and Malawi - Bananas also show big increases
+# 5 of 10 are Maize
+
+# Graph bottom 10
+ggplot(key_crop_yield_chg_bottom) +
+  geom_point(aes(x = year, 
+                 y = crop_production,
+                 color = crop)) +
+  facet_wrap(~entity) +
+  theme_classic()
+
+# Timor - Bananas is interesting 
+# Burkina Faso - Cassava shows a bump in the decrease
+# 5 of 10 are Cocoa Beans
