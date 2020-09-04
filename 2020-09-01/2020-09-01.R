@@ -230,25 +230,24 @@ ggplot(banana_old_new) +
             color = "#7a0177",
             size = 1.5,
             show.legend = FALSE) +
-  labs(y = "",
-       x = "",
-       title = "Banana Yield (Tonnes per Hectare) 1961 to 2018") +
   geom_text(data = subset(banana_old_new, year == 2018 & rank <= 10),
             aes(x = year, y = crop_production, label = entity),
-            hjust = -.1,
+            vjust = 0.2,
+            hjust = -0.1,
             color = "#7a0177") +
   geom_text(data = subset(banana_old_new, 
                           year == 1961 & crop_production >= 30 & 
                             rank > 10 & entity != 'Timor' &
                             entity != 'Portugal'),
             aes(x = year, y = crop_production, label = entity),
+            vjust = 0.2,
             hjust = 1.1,
             color = "#969696") +
   geom_text(data = subset(banana_old_new, 
                           year == 1961 & crop_production >= 30 & 
                             rank > 10 & entity == 'Timor'),
             aes(x = year, y = crop_production, label = entity),
-            vjust = 1.2,
+            vjust = 1.3,
             hjust = 1.1,
             color = "#969696") +
   geom_text(data = subset(banana_old_new, 
@@ -258,11 +257,26 @@ ggplot(banana_old_new) +
             vjust = 0.4,
             hjust = 1.1,
             color = "#969696") +
-  scale_x_continuous(breaks = c(1961, 2018), labels = c('1961', '2018')) +
+  labs(y = "",
+       x = "",
+       title = "Banana Yield (tonnes per hectare) 1961 to 2018",
+       caption = "TidyTuesday 01 Sep 2020 | Data: Our World in Data | Designer: Jenn Schilling | jennschilling.me") +
+  scale_x_continuous(limits = c(1958, 2022)) +
   scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70)) +
   theme_classic() +
   theme(axis.line = element_blank(),
         axis.ticks = element_blank(),
         axis.text.y = element_text(color = "#969696"),
         axis.text.x = element_blank(),
-        panel.grid.major.y = element_line(color = "#cccccc"))
+        panel.grid.major.y = element_line(color = "#cccccc"),
+        panel.background = element_rect(fill = "#F8F8F8", color = "#F8F8F8"),
+        plot.background = element_rect(fill = "#F8F8F8", color = "#F8F8F8"),
+        plot.title.position = "plot",
+        text = element_text(family = 'Verdana'))
+
+ggsave("2020-09-01\\banana.yield.png",
+       plot = last_plot(),
+       device = "png",
+       width = 10,
+       height = 10,
+       dpi = 300)
