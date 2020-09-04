@@ -60,7 +60,7 @@ fertilizer_clean %>%
   facet_wrap(~year) +
   theme_classic()
 
-# Look at top increases and decreases in production
+#### Look at top increases and decreases in production ####
 
 # Compute percent change between 1961 and 2018
 key_crop_yields_chg <- key_crop_yields_long %>%
@@ -182,4 +182,87 @@ uganda_tractor %>%
                 y = cereal_yield_kilograms_per_hectare_kg_per_hectare,
                 label = year)) +
   theme_classic()
-  
+
+#### Explore Bananas ####
+
+bananas <- key_crop_yields_long %>%
+  filter(crop == "Bananas")
+
+banana_old_new <- bananas %>%
+  filter(year %in% c(1961, 2018)) %>%
+  filter(!is.na(code)) %>%
+  filter(entity != 'World') %>%
+  pivot_wider(names_from = year, 
+              names_prefix = "yr_", 
+              values_from = crop_production) %>%
+  filter(!is.na(yr_1961)) %>%
+  filter(!is.na(yr_2018)) %>%
+  mutate(rank = rank(-yr_2018)) %>%
+  mutate(color = ifelse(rank <= 10, "Top 10", 
+                        ifelse(yr_1961 >= 30 &rank > 10, "Prior Top", ""))) %>%
+  pivot_longer(cols = yr_1961:yr_2018,
+               names_to = "year",
+               values_to = "crop_production",
+               values_drop_na = TRUE) %>%
+  mutate(year = sub("yr_", "", year)) %>%
+  mutate(year = as.numeric(year))
+
+ggplot(banana_old_new) +
+  geom_point(aes(x = year, y = crop_production,
+                 group = entity, color = color),
+             show.legend = FALSE) +
+  scale_color_manual(values = c("#969696", "#969696", "#7a0177")) +
+  geom_line(data = subset(banana_old_new, color == ""),
+            aes(x = year, y = crop_production, 
+                group = entity),
+            color = "#969696",
+            size = 0.5,
+            show.legend = FALSE) +
+  geom_line(data = subset(banana_old_new, color == "Prior Top"),
+            aes(x = year, y = crop_production, 
+                group = entity),
+            color = "#969696",
+            size = 1.5,
+            show.legend = FALSE) +
+  geom_line(data = subset(banana_old_new, color == "Top 10"),
+            aes(x = year, y = crop_production, 
+                group = entity),
+            color = "#7a0177",
+            size = 1.5,
+            show.legend = FALSE) +
+  labs(y = "",
+       x = "",
+       title = "Banana Yield (Tonnes per Hectare) 1961 to 2018") +
+  geom_text(data = subset(banana_old_new, year == 2018 & rank <= 10),
+            aes(x = year, y = crop_production, label = entity),
+            hjust = -.1,
+            color = "#7a0177") +
+  geom_text(data = subset(banana_old_new, 
+                          year == 1961 & crop_production >= 30 & 
+                            rank > 10 & entity != 'Timor' &
+                            entity != 'Portugal'),
+            aes(x = year, y = crop_production, label = entity),
+            hjust = 1.1,
+            color = "#969696") +
+  geom_text(data = subset(banana_old_new, 
+                          year == 1961 & crop_production >= 30 & 
+                            rank > 10 & entity == 'Timor'),
+            aes(x = year, y = crop_production, label = entity),
+            vjust = 1.2,
+            hjust = 1.1,
+            color = "#969696") +
+  geom_text(data = subset(banana_old_new, 
+                          year == 1961 & crop_production >= 30 & 
+                            rank > 10 & entity == 'Portugal'),
+            aes(x = year, y = crop_production, label = entity),
+            vjust = 0.4,
+            hjust = 1.1,
+            color = "#969696") +
+  scale_x_continuous(breaks = c(1961, 2018), labels = c('1961', '2018')) +
+  scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70)) +
+  theme_classic() +
+  theme(axis.line = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text.y = element_text(color = "#969696"),
+        axis.text.x = element_blank(),
+        panel.grid.major.y = element_line(color = "#cccccc"))
