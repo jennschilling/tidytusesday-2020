@@ -1,6 +1,6 @@
 # Author : Jenn Schilling
-# Title: #TidyTuesday Global Crop Yiels
-# Date: 8/25/2020
+# Title: #TidyTuesday Global Crop Yields
+# Date: 9/01/2020
 
 
 #### Libraries ####
