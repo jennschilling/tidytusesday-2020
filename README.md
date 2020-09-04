@@ -3,6 +3,9 @@ Repository for #TidyTuesday work
 
 Data Source: https://github.com/rfordatascience/tidytuesday
 
+#  01 September 2020
+![](https://github.com/jennschilling/tidytusesday/blob/master/2020-09-01/banana.yield.png)
+
 # 25 August 2020
 ![](https://github.com/jennschilling/tidytusesday/blob/master/2020-08-25/chopped.png)
 
