@@ -279,4 +279,4 @@ ggsave("2020-09-01\\banana.yield.png",
        device = "png",
        width = 10,
        height = 10,
-       dpi = 300)
+       dpi = 500)
