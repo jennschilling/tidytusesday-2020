@@ -232,7 +232,7 @@ ggplot(banana_old_new) +
             show.legend = FALSE) +
   geom_text(data = subset(banana_old_new, year == 2018 & rank <= 10),
             aes(x = year, y = crop_production, label = entity),
-            vjust = 0.2,
+            vjust = 0.3,
             hjust = -0.1,
             color = "#7a0177") +
   geom_text(data = subset(banana_old_new, 
@@ -279,4 +279,4 @@ ggsave("2020-09-01\\banana.yield.png",
        device = "png",
        width = 10,
        height = 10,
-       dpi = 500)
+       dpi = 300)
