@@ -52,6 +52,7 @@ ggplot() +
 speaker_scene <- friends %>%
   count(season, episode, scene, speaker) %>%
   filter(speaker != "#ALL#") %>% # remove all
+  filter(speaker != 'Scene Directions') %>% # remove scene directions
   filter(!is.na(speaker)) # remove NAs
 
 library(reshape2)
@@ -73,3 +74,27 @@ norm <- speaker_scene_matrix_s2 / rowSums(speaker_scene_matrix_s2)
 h <- hclust(dist(norm, method = "manhattan"))
 
 plot(h)
+
+# Season 1
+speaker_scene_1 <- speaker_scene %>% 
+  filter(season == 1)
+
+chars_1 <- speaker_scene_1 %>%
+  group_by(speaker) %>%
+  summarise(num_lines = sum(n)) %>%
+  top_n(10, num_lines)
+
+speaker_scene_1 <- inner_join(speaker_scene_1, chars_1, by = "speaker")
+
+speaker_scene_matrix_1 <- speaker_scene_1 %>%
+  mutate(id = paste(season, episode, scene, sep = ".")) %>%
+  select(id, speaker, n) %>%
+  acast(speaker ~ id, fun.aggregate = sum)
+
+norm <- speaker_scene_matrix_1 / rowSums(speaker_scene_matrix_1)
+
+h <- hclust(dist(norm, method = "manhattan"))
+
+plot(h)
+
+
