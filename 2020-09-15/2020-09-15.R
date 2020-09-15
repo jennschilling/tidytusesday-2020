@@ -141,8 +141,7 @@ kids %>%
             hjust = -0.1,
             vjust = 0.2)+
   scale_x_continuous(limits = c(1997, 2021)) +
-  facet_wrap(~region,
-             scales = "free") +
+  facet_wrap(~region) +
   theme_classic()
 
 # Higher Ed Spending
@@ -156,6 +155,5 @@ kids %>%
             hjust = -0.1,
             vjust = 0.2) +
   scale_x_continuous(limits = c(1997, 2021)) +
-  facet_wrap(~region,
-             scales = "free") +
+  facet_wrap(~region) +
   theme_classic()
