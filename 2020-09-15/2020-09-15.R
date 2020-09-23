@@ -157,3 +157,29 @@ kids %>%
   scale_x_continuous(limits = c(1997, 2021)) +
   facet_wrap(~region) +
   theme_classic()
+
+
+# PK-12 Ed spending
+# Elementary and secondary education expenditures per child, in $2016
+
+# Average Spending
+avg_kids <- kids %>%
+  filter(variable == "PK12ed") %>%
+  group_by(year) %>%
+  summarise(avg_inf_adj_perchild = mean(inf_adj_perchild))
+  
+
+kids %>%
+  filter(variable == 'PK12ed') %>%
+  ggplot() +
+  geom_line(aes(x = year, y = inf_adj_perchild, group = state),
+            size = 0.5,
+            color = "grey") +
+  geom_line(data = avg_kids,
+            aes(x = year, y = avg_inf_adj_perchild),
+            size = 1,
+            color = 'red') +
+  labs(title = "Elementary and secondary education expenditures per child, in $2016",
+       xlabs = "Spending per Child in $2016",
+       ylabs = "Year") +
+  theme_classic()
