@@ -167,19 +167,89 @@ avg_kids <- kids %>%
   filter(variable == "PK12ed") %>%
   group_by(year) %>%
   summarise(avg_inf_adj_perchild = mean(inf_adj_perchild))
+
+# Top and Bottom Spenders for Labels
+label_kids <- kids %>%
+  filter(variable == "PK12ed" & year == 2016) %>%
+  filter(state %in% c('District of Columbia', # Top 5
+                      'New York',
+                      'Vermont',
+                      'New Jersey',
+                      'Connecticut',
+                      'Utah', # Bottom 5
+                      'Arizona', 
+                      'Idaho', 
+                      'Oklahoma',
+                      'North Carolina'))
   
+# Labels for y-axis, to format labels as $K
+ylab <- c(5, 10, 15)
 
 kids %>%
   filter(variable == 'PK12ed') %>%
   ggplot() +
-  geom_line(aes(x = year, y = inf_adj_perchild, group = state),
-            size = 0.5,
-            color = "grey") +
+  # State lines
+  geom_line(aes(x = year, y = inf_adj_perchild * 1000, group = state),
+            size = 0.7,
+            color = "#969696") +
+  # Label for Top and Bottom 5
+  geom_text(data = filter(label_kids, 
+                          state != 'Idaho' & state != 'Arizona' & state != 'Utah'),
+            aes(x = year, y = inf_adj_perchild * 1000, label = state),
+            color = "#969696",
+            fontface = "bold",
+            hjust = -0.02) +
+  geom_text(data = filter(label_kids, 
+                          state == 'Utah'),
+            aes(x = year, y = inf_adj_perchild * 1000, label = state),
+            color = "#969696",
+            fontface = "bold",
+            hjust = -0.02,
+            vjust = 1.3) +
+  geom_text(data = filter(label_kids, 
+                          state == 'Arizona'),
+            aes(x = year, y = inf_adj_perchild * 1000, label = state),
+            color = "#969696",
+            fontface = "bold",
+            hjust = -0.02,
+            vjust = 0.6) +
+  geom_text(data = filter(label_kids, 
+                          state == 'Idaho'),
+            aes(x = year, y = inf_adj_perchild * 1000, label = state),
+            color = "#969696",
+            fontface = "bold",
+            hjust = -0.02,
+            vjust = -0.1) +
+  # U.S. Average Line
   geom_line(data = avg_kids,
-            aes(x = year, y = avg_inf_adj_perchild),
-            size = 1,
-            color = 'red') +
-  labs(title = "Elementary and secondary education expenditures per child, in $2016",
-       xlabs = "Spending per Child in $2016",
-       ylabs = "Year") +
-  theme_classic()
+            aes(x = year, y = avg_inf_adj_perchild * 1000),
+            size = 1.2,
+            color = '#0F4C81') +
+  # Label for U.S. Average Line
+  geom_text(data = filter(avg_kids, year == 2016),
+            aes(x = year, y = avg_inf_adj_perchild * 1000),
+            label = "U.S. Average",
+            color = '#0F4C81',
+            fontface = "bold",
+            hjust = -0.02) +
+  labs(title = "Annual elementary and secondary education expenditures per child",
+       subtitle = "1997 through 2016 in 2016 dollars",
+       x = "",
+       y = "",
+       caption = "TidyTuesday 15 Sep 2020 | Data: Urban Institute via tidykids | Designer: Jenn Schilling | jennschilling.me") +
+  scale_y_continuous(labels = paste0("$", ylab, "K"),
+                     breaks = 1000 * ylab) +
+  scale_x_continuous(limits = c(1997, 2019.5),
+                     breaks = c(1998, 2000, 2002, 2004, 2006, 2008, 
+                                2010, 2012, 2014, 2016)) +
+  theme_classic() +
+  theme(plot.title.position = "plot",
+        text = element_text(family = 'Verdana'))
+
+
+ggsave("2020-09-15\\k12_spend_per_child.png",
+       plot = last_plot(),
+       device = "png",
+       width = 10,
+       height = 8,
+       dpi = 300)
