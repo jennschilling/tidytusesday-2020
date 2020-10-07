@@ -3,6 +3,9 @@ Repository for #TidyTuesday work
 
 Data Source: https://github.com/rfordatascience/tidytuesday
 
+# 15 September 2020
+![](https://github.com/jennschilling/tidytusesday/blob/master/2020-09-15/k12_spend_per_child.png)
+
 # 08 September 2020
 ![](https://github.com/jennschilling/tidytusesday/blob/master/2020-09-08/friends_seasons.gif)
 
