@@ -8,7 +8,6 @@ library(tidytuesdayR)
 library(tidyverse)
 library(skimr)
 library(extrafont)
-library(cowplot)
 library(ggtext)
 
 # Load  fonts
@@ -117,7 +116,21 @@ ggplot(first_ascent_count) +
   geom_bar(aes(x = first_ascent_year, y = count_female_peaks), 
            stat = "Identity", fill = "#7a0177") +
   labs(x = "Year of First Ascent",
-       y = "Number of First Ascents") +
-  theme_classic() 
+       y = "Number of First Ascents",
+       title = "Himalayan Climbing Expeditions - First Ascents",
+       subtitle = "Bar height represents the total number of first ascents by year. <br>
+       <b style='color:#7a0177'>Purple</b> represents the number of first ascents with female members.",
+       caption = "TidyTuesday 22 Sep 2020 | Data: The Himalayan Database | Jenn Schilling | jennschilling.me") +
+  scale_y_continuous(expand = c(0, 0), n.breaks = 10) +
+  scale_x_continuous(n.breaks = 10) +
+  theme_classic() +
+  theme(text = element_text(family = 'Verdana'),
+        plot.subtitle = element_markdown())
 
+ggsave("2020-09-22\\first_ascents.png",
+       plot = last_plot(),
+       device = "png",
+       width = 7,
+       height = 6,
+       dpi = 300)
             
