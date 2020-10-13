@@ -52,6 +52,7 @@ ggplot(.) +
 
 #### Text Analysis ####
 
+# Remove some songs and then get words
 beyonce_lyrics <- beyonce %>%
   filter(!str_detect(song_name, "Live")) %>% 
   filter(!str_detect(song_name, "Alternate")) %>%
@@ -70,5 +71,10 @@ beyonce_lyrics <- beyonce %>%
   filter(!str_detect(song_name, "Rap")) %>%
   filter(!str_detect(song_name, "Hompage")) %>%
   filter(!str_detect(song_name, "VMA")) %>%
-  unnest_tokens(word, line)
+  unnest_tokens(word, line) %>% 
+  anti_join(stop_words, by=c("word"="word")) 
 
+# Count words
+beyonce_lyrics %>%
+  count(word, sort = TRUE) %>%
+  View(.)
