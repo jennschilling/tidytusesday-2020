@@ -124,3 +124,52 @@ charts %>%
   geom_bar(aes(x = chart_position, y = n, fill = artist), 
            stat = "identity", position = "dodge") +
   facet_wrap(~chart, scales = "free")
+
+# Worldwide sales
+
+xlabs <- c(0, 5, 10)
+
+sales %>%
+  filter(country == "World") %>%
+  mutate(released = gsub("\\s*\\([^\\)]+\\)\\[[^\\)]+\\]", "", released)) %>%
+  mutate(year = substr(released, nchar(released) - 3, nchar(released))) %>%
+  ggplot(.) +
+  geom_bar(aes(y = reorder(paste(title, paste0("(", year, ")"), sep = "\n"), 
+                           sales), 
+               x = sales,
+               fill = artist), 
+           stat = "identity") + 
+  geom_text(aes(y = reorder(paste(title, paste0("(", year, ")"), sep = "\n"), 
+                            sales), 
+                x = sales, 
+                label = paste0("$", sales / 1000000, "M")),
+            family = "Verdana",
+            size = 3.5,
+            hjust = 0) +
+  scale_fill_manual(values = c("#D4AF37", "red"),
+                    guide = FALSE) +
+  facet_wrap(~artist, scales = "free_y") +
+  scale_x_continuous(expand = expansion(mult = c(0, .1)),
+                     labels = paste0("$", xlabs, "M"),
+                     breaks = 1000000 * xlabs ) +
+  labs(x = "",
+       y = "",
+       title = "Worldwide Album Sales",
+       subtitle = "Both Beyoncé and Taylor Swift made the most in worldwide sales from their first albums.",
+       caption = "TidyTuesday 29 Sep 2020 | Designer: Jenn Schilling | jennschilling.me") +
+  theme_classic() +
+  theme(axis.line = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 10, family = "Verdana", color = "black"),
+        strip.background = element_blank(),
+        strip.text = element_text(size = 12, hjust = 0, family = "Verdana"),
+        text = element_text(family = "Verdana", size = 12),
+        plot.title.position = "plot")
+
+ggsave("2020-09-29\\worldwide_sales.png",
+       plot = last_plot(),
+       device = "png",
+       width = 10.7,
+       height = 5,
+       dpi = 300)
