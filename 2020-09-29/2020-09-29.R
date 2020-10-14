@@ -12,6 +12,8 @@ library(ggtext)
 library(tidytext)
 library(lubridate)
 library(stringr)
+library(reshape2)
+library(wordcloud)
 
 # Load  fonts
 #font_import()
@@ -30,6 +32,7 @@ taylor <- tuesdata$taylor_swift_lyrics %>%
 charts <- tuesdata$charts
 
 sales <- tuesdata$sales
+
 
 
 #### Explore Data ####
@@ -78,3 +81,26 @@ beyonce_lyrics <- beyonce %>%
 beyonce_lyrics %>%
   count(word, sort = TRUE) %>%
   View(.)
+
+# Sentiment
+beyonce_sentiment <- beyonce_lyrics %>%
+  inner_join(get_sentiments("nrc"))
+
+ggplot(beyonce_sentiment) +
+  geom_bar(aes(x = sentiment))
+
+beyonce_sentiment %>%
+  count(song_name, sentiment, sort = TRUE) %>%
+  group_by(sentiment) %>%
+  top_n(5) %>%
+  ggplot() +
+  geom_bar(aes(x = song_name, y = n, group = sentiment), stat = "identity") +
+  facet_wrap(~sentiment, scales = "free") +
+  coord_flip()
+
+beyonce_neg_pos <- beyonce_lyrics %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("#417E5D", "#6A5DC9"),
+                   max.words = 100, scale=c(3.5,0.50))
