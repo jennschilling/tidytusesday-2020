@@ -31,7 +31,8 @@ taylor <- tuesdata$taylor_swift_lyrics %>%
 
 charts <- tuesdata$charts
 
-sales <- tuesdata$sales
+sales <- tuesdata$sales %>%
+  mutate(country = ifelse(country == "WW", "World", country))
 
 
 
@@ -104,3 +105,22 @@ beyonce_neg_pos <- beyonce_lyrics %>%
   acast(word ~ sentiment, value.var = "n", fill = 0) %>%
   comparison.cloud(colors = c("#417E5D", "#6A5DC9"),
                    max.words = 100, scale=c(3.5,0.50))
+
+#### Sales & Charts ####
+
+sales %>%
+  filter(country %in% c("UK", "US", "World")) %>%
+  mutate(released = gsub("\\s*\\([^\\)]+\\)\\[[^\\)]+\\]", "", released)) %>%
+  mutate(year = substr(released, nchar(released) - 3, nchar(released))) %>%
+  ggplot(.) +
+  geom_point(aes(x = year, y = sales, color = artist, group = artist)) +
+  geom_text(aes(x = year, y = sales, color = artist, group = artist, label = title)) +
+  facet_wrap(~country)
+
+charts %>%
+  filter(chart_position != '—') %>%
+  count(artist, chart, chart_position) %>%
+  ggplot(.) +
+  geom_bar(aes(x = chart_position, y = n, fill = artist), 
+           stat = "identity", position = "dodge") +
+  facet_wrap(~chart, scales = "free")
