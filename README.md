@@ -3,6 +3,9 @@ Repository for #TidyTuesday work
 
 Data Source: https://github.com/rfordatascience/tidytuesday
 
+# 29 September 2020
+![](https://github.com/jennschilling/tidytusesday/blob/master/2020-09-29/worldwide_sales.png)
+
 # 22 September 2020
 ![](https://github.com/jennschilling/tidytusesday/blob/master/2020-09-22/first_ascents.png)
 
