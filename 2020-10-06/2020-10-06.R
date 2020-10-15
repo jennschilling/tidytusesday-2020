@@ -92,5 +92,5 @@ elite_8_teams <- tournament %>%
 
 elite_8_teams %>%
   ggplot(.) +
-  geom_line(aes(x = year, y = seed, group = school)) +
+  geom_point(aes(x = year, y = seed)) +
   facet_wrap(~tourney_finish)
