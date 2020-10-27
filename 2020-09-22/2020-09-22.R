@@ -8,7 +8,6 @@ library(tidytuesdayR)
 library(tidyverse)
 library(skimr)
 library(extrafont)
-library(cowplot)
 library(ggtext)
 
 # Load  fonts
@@ -20,6 +19,10 @@ loadfonts(device = "pdf")
 tuesdata <- tidytuesdayR::tt_load('2020-09-22')
 
 members <- tuesdata$members
+
+peaks <- tuesdata$peaks
+
+expeditions <- tuesdata$expeditions
 
 #### Explore Data ####
 
@@ -54,10 +57,80 @@ staff %>%
   geom_bar(aes(x = age_bin_name,
                fill = died))
 
-died <- members %>%
-  filter(died == TRUE)
+# Female expedition members
 
-died %>%
-  ggplot() +
-  geom_bar(aes(x = hired,
-               fill = hired))
+female <- members %>%
+  filter(sex == "F")
+
+table(female$expedition_role)
+
+table(female$year)
+
+table(female$hired)
+
+table(female$solo)
+
+female %>% filter(solo == TRUE) %>% View(.)
+
+table(female$peak_name)
+
+skim(peaks)
+
+# Join peaks data with female member data and expedition data to find the
+# expeditions and peaks that had first ascents with female members
+
+female_plus <- left_join(female, peaks, by = "peak_id") 
+
+female_first <- female_plus %>% 
+  filter(expedition_id == first_ascent_expedition_id) %>%
+  group_by(expedition_id) %>%
+  dplyr::summarize(num_female = n()) %>%
+  ungroup() %>%
+  left_join(., expeditions, by = "expedition_id") %>%
+  mutate(perc_female = num_female / members)
+
+female_first_count <- female_first %>%
+  group_by(year) %>%
+  summarise(count_female_peaks = n()) %>%
+  ungroup()
+
+first_ascent_count <- peaks %>%
+  group_by(first_ascent_year) %>%
+  summarise(count = n()) %>%
+  ungroup() %>%
+  filter(!is.na(first_ascent_year)) %>%
+  filter(first_ascent_year != '201') %>%
+  mutate(year = first_ascent_year) %>%
+  left_join(., female_first_count, by = "year") %>%
+  select(first_ascent_year, count, count_female_peaks) %>%
+  mutate(count_female_peaks = ifelse(is.na(count_female_peaks), 
+                                     0, 
+                                     count_female_peaks))
+
+#### Plot ####
+
+
+ggplot(first_ascent_count) +
+  geom_bar(aes(x = first_ascent_year, y = count),
+           stat = "Identity", fill = "#969696") +
+  geom_bar(aes(x = first_ascent_year, y = count_female_peaks), 
+           stat = "Identity", fill = "#7a0177") +
+  labs(x = "Year of First Ascent",
+       y = "Number of First Ascents",
+       title = "Himalayan Climbing Expeditions - First Ascents",
+       subtitle = "Bar height represents the total number of first ascents by year. <br>
+       <b style='color:#7a0177'>Purple</b> represents the number of first ascents with female members.",
+       caption = "TidyTuesday 22 Sep 2020 | Data: The Himalayan Database | Jenn Schilling | jennschilling.me") +
+  scale_y_continuous(expand = c(0, 0), n.breaks = 10) +
+  scale_x_continuous(n.breaks = 10) +
+  theme_classic() +
+  theme(text = element_text(family = 'Verdana'),
+        plot.subtitle = element_markdown())
+
+ggsave("2020-09-22\\first_ascents.png",
+       plot = last_plot(),
+       device = "png",
+       width = 7,
+       height = 6,
+       dpi = 300)
+            
