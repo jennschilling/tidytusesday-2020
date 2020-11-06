@@ -65,13 +65,15 @@ ikea_category_summary <- ikea %>%
 
 ikea %>%
   ggplot() +
-  geom_boxplot(aes(x = fct_reorder(category, price, median, .desc = TRUE), 
-                   y = price_usd)) +
+  geom_boxplot(aes(x = fct_reorder(category, price, median, .desc = FALSE), 
+                   y = price_usd),
+               color = "#0051BA") +
   labs(title = "Price Distribution of IKEA Furniture by Category",
        y = "Price in USD",
        x = "") +
+  coord_flip() +
   theme_classic() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(#axis.text.x = element_text(angle = 45, hjust = 1),
         text = element_text(family = "Noto Sans"),
         plot.title.position = "plot")
 
