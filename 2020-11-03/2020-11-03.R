@@ -63,7 +63,7 @@ ikea_category_summary <- ikea %>%
   mutate(n_text = paste0("N = ", n)) %>%
   ungroup()
 
-ikea %>%
+price_dist <- ikea %>%
   ggplot() +
   geom_boxplot(aes(x = fct_reorder(category, price, median, .desc = FALSE), 
                    y = price_usd),
@@ -77,12 +77,8 @@ ikea %>%
         text = element_text(family = "Noto Sans"),
         plot.title.position = "plot")
 
-# ikea %>%
-#   ggplot() +
-#   geom_violin(aes(x = fct_reorder(category, price, median, .desc = TRUE), 
-#                   y = price_usd))
 
-ikea_category_summary %>%
+cat_count <- ikea_category_summary %>%
   ggplot() +
   geom_bar(aes(x = n, y = category), stat = "identity", fill = "#0051BA") +
   labs(title = "Number of Items in Each Category",
