@@ -41,7 +41,7 @@ table(wind_turbines$province_territory)
 table(wind_turbines$manufacturer)
 
 ggplot(wind_turbines) +
-  geom_bar(aes(x = manufacturer)) # 5 manufacturers dwarf the rest, out of those 1 stands out
+  geom_bar(aes(x = manufacturer)) # 5 manufacturers dwarf the rest, out of the rest 1 stands out
 
 # Turbine number in project
 
