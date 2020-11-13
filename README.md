@@ -3,6 +3,9 @@ Repository for #TidyTuesday work
 
 Data Source: https://github.com/rfordatascience/tidytuesday
 
+# 10 November 2020
+![](https://github.com/jennschilling/tidytusesday/blob/master/2020-11-10/landline_v_mobile.gif)
+
 # 03 November 2020
 ![](https://github.com/jennschilling/tidytusesday/blob/master/2020-11-03/ikea_category_prices.png)
 
