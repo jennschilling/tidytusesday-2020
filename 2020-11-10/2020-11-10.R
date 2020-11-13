@@ -154,6 +154,6 @@ yr_plot <- phone_data %>%
   exit_fade()
 
 animate(yr_plot,
-        duration = 15)  
+        duration = 20)  
 
 anim_save("2020-11-10\\landline_v_mobile.gif")
