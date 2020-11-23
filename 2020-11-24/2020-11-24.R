@@ -1,0 +1,22 @@
+# Author : Jenn Schilling
+# Title: #TidyTuesday 
+# Date: 11/24/2020
+
+#### Libraries ####
+
+library(tidytuesdayR)
+library(tidyverse)
+library(skimr)
+
+#### Get the Data ####
+
+tuesdata <- tidytuesdayR::tt_load('2020-11-24')
+
+
+
+#### Explore the Data ####
+
+
+
+
+#### Data manipulation ####
