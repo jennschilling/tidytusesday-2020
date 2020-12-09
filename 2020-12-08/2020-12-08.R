@@ -8,6 +8,7 @@ library(tidytuesdayR)
 library(tidyverse)
 library(skimr)
 library(tidytext)
+library(stringr)
 
 #### Get the Data ####
 
@@ -39,11 +40,24 @@ women_text_summary <- women_text %>%
          word = ifelse(word == "activists", "activist", word),
          word = ifelse(word == "dr", "doctor", word),
          word = ifelse(word == "children’s", "children", word)) %>%
+  mutate(word = str_to_title(word)) %>%
   count(category, word) %>%
   filter(n > 2) %>%
   ungroup() %>%
   arrange(category, -n)
 
 ggplot(women_text_summary) +
-  geom_bar(aes(y = reorder(word, n), x = n), stat = "identity") +
-  facet_wrap(~category, scales = "free")
+  geom_bar(aes(y = reorder(word, n), 
+               x = n,
+               fill = category), 
+           stat = "identity") +
+  facet_wrap(~category, scales = "free") +
+  scale_fill_manual(values = c("#DC75AD",
+                               "#68BF7A",
+                               "#7ECCE2",
+                               "#F19758")) +
+  labs(y = "", x = "",
+       title = "Word Frequency in Description by Category") +
+  theme_classic() +
+  theme(legend.position = "none",
+        strip.background = element_blank())
