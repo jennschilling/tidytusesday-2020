@@ -1,5 +1,5 @@
 # Author : Jenn Schilling
-# Title: #TidyTuesday Toronto Shelters
+# Title: #TidyTuesday Women of 2020
 # Date: 12/08/2020
 
 #### Libraries ####
