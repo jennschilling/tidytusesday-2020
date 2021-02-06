@@ -1,7 +1,7 @@
-# #TidyTusesday
+# #TidyTusesday 2020
 Repository for #TidyTuesday work
 
-Data Source: https://github.com/rfordatascience/tidytuesday
+[#TidyTuesday Data Source](https://github.com/rfordatascience/tidytuesday)
 
 # 24 November 2020
 ![](https://github.com/jennschilling/tidytusesday/blob/master/2020-11-24/washington_hikes.png)
