@@ -1,5 +1,4 @@
 # #TidyTusesday 2020
-Repository for #TidyTuesday work
 
 [#TidyTuesday 2020 Data Source](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020)
 
