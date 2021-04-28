@@ -1,6 +1,9 @@
 # #TidyTusesday 2020 
 Data visualizations developed in R using data from [#TidyTuesday 2020](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020).
 
+# 2020 Plots
+![](https://github.com/jennschilling/tidytuesday-2021/blob/main/2021-all-plots/2020-summary.png)
+
 # 24 November 2020
 ![](https://github.com/jennschilling/tidytusesday/blob/master/2020-11-24/washington_hikes.png)
 
